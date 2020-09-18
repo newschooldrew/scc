@@ -35,12 +35,15 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import {fetchAllMasks,getPublicStripeKey} from '../actions'
 import CheckoutForm from './CheckoutForm'
+import { ButtonGroup, Table, UncontrolledTooltip } from "reactstrap";
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 const useStyles = makeStyles(shoppingCartStyle);
 
 function ShoppingCartPage({history}) {
   const {state,dispatch} = useContext(AuthContext)
   const {allMasks,cartItems} = state;
+  const mobileSize = useMediaQuery('(max-width:600px)');
   const stripePromise = getPublicStripeKey().then(key => {
     console.log("key:")
     console.log(key)
@@ -101,8 +104,55 @@ const removeItemFromCart = (id,title,price) =>{
         dispatch({type:"CLEAR_CART",payload:item})
     }
 }
+
+const totalPriceDivStyle = {
+  width:'100%',
+  display:'flex',
+  flexDirection:'row'
+}
+
+const totalPriceOuterStyle = {
+  width:'10%',
+  justifyContent:'spaceBetween',
+}
+
+const quantityStyle = {
+  textAlign:'center'
+}
+const totalPriceStyle = {
+  width:'80%',
+  textAlign:'center',
+  justifyContent:'spaceBetween',
+  fontSize:'3em'
+}
+
+const noItemsMargin = {
+    margin:'10% 0 0 0'
+}
+
+const itemDiv = {
+    width:'80%',
+    textAlgin:'center',
+    fontSize:'1.5em',
+    display:'flex',
+    textAlign: 'center',
+    margin: 'auto',
+    flexDirection:'column'
+}
+
+const innerItemDiv = {
+    justifyContent:'spaceBetween',
+    width:'10%',
+}
+
+const lineItem = {
+    display:'inlineBlock',
+}
+
 const classes = useStyles();
 let sessionItems = JSON.parse(sessionStorage.getItem('cart'))
+let maskTotal = totalPrice(sessionItems||cartItems);
+let trueTotal = parseFloat(maskTotal) + 5.00;
 if(!cartItems && !sessionItems) return (<div>loading checkout items</div>)
 
   return (
@@ -141,26 +191,15 @@ if(!cartItems && !sessionItems) return (<div>loading checkout items</div>)
                       
                       let cartItemCount = JSON.parse(sessionStorage.getItem('cart'))
                       let matchCartItemArr = [];
-                      let matchCartItem;
-                      
-                      // sessionItems.map(item =>{
-                      //   matchCartItem = sessionItems.find(mask => mask.id == item._id)
-                      //   if(matchCartItem !== undefined){
-                      //     matchCartItemArr.push(matchCartItem)
-                      //   }
-                      // })
-
 
                       return(
-                      //   if(sessionStorage.getItem(id) == post.quantity){
-                      //     limitReached = true;
-                      // }
                         sessionItems.map((item,idx) =>{
                           const {id,title,price,quantity} = item;
                           let limitReached;
                           console.log("quantity:")
                           console.log(quantity)
 
+                          if(allMasks){
                           allMasks.map(mask =>{
                             if(mask._id == id){ 
                               matchCartItemArr.push(mask)
@@ -168,134 +207,138 @@ if(!cartItems && !sessionItems) return (<div>loading checkout items</div>)
                             console.log("matchCartItemArr:")
                             console.log(matchCartItemArr)
                           })
+                        }
                           let currentItem = matchCartItemArr.filter(item => item._id == id)
-                          console.log("currentItem:")
-                          console.log(currentItem)
-                          console.log(quantity)
-                          console.log(currentItem[0].quantity)
-                          console.log(currentItem[0].quantity == quantity)
+                      
+                          let tableHeadData;
+
+                          if(!mobileSize){
+                            tableHeadData = [
+                              "",
+                              "PRODUCT",
+                              "PRICE",
+                              "QTY",
+                              "AMOUNT",
+                              ""
+                            ]
+                          } else{
+                            tableHeadData = [
+                              "",
+                              "PRICE",
+                              "QTY",
+                              "AMOUNT",
+                              ""
+                            ]                            
+                          }
+
+                            let tableData = [  
+                              // image
+                                      <div className={classes.imgContainer} key={1}>
+                                      <img src={item.url} alt="..." className={classes.img} />
+                                        </div>,
+                              // PRODUCT
+                                          <span key={1}>
+                                          <a href="#jacket" className={classes.tdNameAnchor}>
+                                            {item.title}
+                                          </a>
+                                          <br />
+                                          <small className={classes.tdNameSmall}>
+                                            {item.description}
+                                          </small>
+                                        </span>,
+                              // PRICE
+                                        <span key={1}>
+                                          <small className={classes.tdNumberSmall}>$</small> {item.price}
+                                        </span>,
+                            // QTY
+                                        <span key={1}>
+                                          {` `}
+                                          <div className={classes.buttonGroup}>
+                                          
+                                            <Button
+                                              color="info"
+                                              size="sm"
+                                              round
+                                              disabled={currentItem[0].quantity == quantity}
+                                              onClick={() => addItemToCart(id,title,price)}
+                                            >
+                                              <i className="now-ui-icons ui-1_simple-add"></i>
+                                            </Button>
+                                            <p style={quantityStyle}>{cartItemCount[idx].quantity}</p>
+                                            <Button
+                                              color="info"
+                                              size="sm"
+                                              round
+                                              onClick={() => removeItemFromCart(id,title,price)}
+                                            >
+                                              <i className="now-ui-icons ui-1_simple-delete"></i>
+                                            </Button>
+
+                                          </div>
+                                        </span>,
+                            // AMOUNT
+                                        <span key={1}>
+                                          <small className={classes.tdNumberSmall}>$</small> {totalItemPrice(item)}
+                                        </span>,
+                                        <Tooltip
+                                          key={1}
+                                          id="close1"
+                                          title="Remove item"
+                                          placement="left"
+                                          classes={{ tooltip: classes.tooltip }}
+                                        >
+                                          <Button link className={classes.actionButton}>
+                                            <Close  onClick={() => handleClick(item)}/>
+                                          </Button>
+                                        </Tooltip>
+                                      ]
+
+                                      if(mobileSize){
+                                        tableData = tableData.filter((data,idx) =>{
+                                              if(idx !== 1){
+                                                return data 
+                                              }
+                                        })
+                                      }
+
                         return(
                                 <CheckoutTable
                                     key={id}
-                                    tableHead={[
-                                        "",
-                                        "PRODUCT",
-                                        "COLOR",
-                                        "SIZE",
-                                        "PRICE",
-                                        "QTY",
-                                        "AMOUNT",
-                                        ""
-                                      ]}
-                                    tableData={[
-                                      [  
-                                    <div className={classes.imgContainer} key={1}>
-                                    <img src={item.url} alt="..." className={classes.img} />
-                                      </div>,
-                                        <span key={1}>
-                                        <a href="#jacket" className={classes.tdNameAnchor}>
-                                          {item.title}
-                                        </a>
-                                        <br />
-                                        <small className={classes.tdNameSmall}>
-                                          {item.description}
-                                        </small>
-                                      </span>,
-                                      "Red",
-                                      "M",
-                                      <span key={1}>
-                                        <small className={classes.tdNumberSmall}>$</small> {item.price}
-                                      </span>,
-                                      <span key={1}>
-                                        {` `}
-                                        <div className={classes.buttonGroup}>
-                                          <Button
-                                            color="info"
-                                            size="sm"
-                                            round
-                                            className={classes.firstButton}
-                                            onClick={() => removeItemFromCart(id,title,price)}
-                                          >
-                                            <Remove />
-                                          </Button>
-                                          
-                          {cartItemCount[idx].quantity}
-                                                                    
-                                          <Button
-                                            color="info"
-                                            size="sm"
-                                            round
-                                            disabled={currentItem[0].quantity == quantity}
-                                            className={classes.lastButton}
-                                            onClick={() => addItemToCart(id,title,price)}
-                                          >
-                                            <Add />
-                                          </Button>
-                                        </div>
-                                      </span>,
-                                      <span key={1}>
-                                        <small className={classes.tdNumberSmall}>$</small> {totalItemPrice(item)}
-                                      </span>,
-                                      <Tooltip
-                                        key={1}
-                                        id="close1"
-                                        title="Remove item"
-                                        placement="left"
-                                        classes={{ tooltip: classes.tooltip }}
-                                      >
-                                        <Button link className={classes.actionButton}>
-                                          <Close  onClick={() => handleClick(item)}/>
-                                        </Button>
-                                      </Tooltip>
-                                    ]   
-                                    ]}
-                                    tableShopping
-                                          customHeadCellClasses={[
-                                            classes.textCenter,
-                                            classes.description,
-                                            classes.description,
-                                            classes.textRight,
-                                            classes.textRight,
-                                            classes.textRight
-                                          ]}
-                                          customHeadClassesForCells={[0, 2, 3, 4, 5, 6]}
-                                          customCellClasses={[
-                                            classes.tdName,
-                                            classes.customFont,
-                                            classes.customFont,
-                                            classes.tdNumber,
-                                            classes.tdNumber + " " + classes.tdNumberAndButtonGroup,
-                                            classes.tdNumber + " " + classes.textCenter
-                                          ]}
-                                          customClassesForCells={[1, 2, 3, 4, 5, 6]}
+                                    tableHead={tableHeadData}
+                                    tableData={[tableData]}
                                         />
                                             )
                                           })
                                           // end of sessionItems map
 
-
-
                                          )
-                                      }
+                                      } 
                                       // end of sessionItems length
 
-                                      else {return <span>No items left in this cart</span>}
+                                      else {return <p style={noItemsMargin}>No items left in this cart</p>}
                                     })()
                                     }
+                                          <div style={itemDiv}>
+                                            <div style={innerItemDiv}></div>
+                                            <div style={lineItem}>
+                                              <p> Mask: ${maskTotal}</p>
+                                            </div>
+                                            <div style={lineItem}>
+                                              <p>Shipping: $5</p>
+                                              </div>
+                                            <div style={innerItemDiv}></div>
+                                          </div>                            
+                                      <div style={totalPriceDivStyle}>
+                                        <div style={totalPriceOuterStyle}></div>
+                                            <p style={totalPriceStyle}>Total: ${trueTotal.toFixed(2)}</p>
+                                        <div style={totalPriceOuterStyle}></div>
+                                          </div>
                                       <Grid item xs={3}></Grid>
-                                      <Grid item xs={3}>
-                                        <Typography>Total</Typography>                        
-                                      </Grid>
-                                      <Grid item xs={3}>        
-                                          <span >
-                                            <small>$</small>{totalPrice(sessionItems||cartItems)}
-                                          </span>
-                                        </Grid>
                                         <Grid item xs={3}>
                                           </Grid>
                                           <Grid item xs={6}>
                                         <Elements stripe={stripePromise}>
-                                          <CheckoutForm price={totalPrice(sessionItems||cartItems)} />
+                                          <CheckoutForm price={trueTotal} />
                                         </Elements>
                                         </Grid>
                                         <Grid item xs={3}>

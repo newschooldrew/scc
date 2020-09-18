@@ -1,30 +1,33 @@
 import React, {useContext, useEffect, useState } from "react";
 import AuthContext from '../AuthContext'
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
-import {createPaymentIntent,createOrder,getProductDetails} from '../actions'
+import {createPaymentIntent,createOrder,removeItemFromInventory} from '../actions'
 import {withRouter} from 'react-router-dom'
 import { Col, Row, Button, Form, FormGroup, Label, Input } from 'reactstrap';
+import './CheckoutForm.scss'
 
 const CheckoutForm = ({price,history}) => {
   const {state,dispatch} = useContext(AuthContext)
-  const {username,cartItems} = state;
+  const {cartItems} = state;
   const [clientSecret, setClientSecret] = useState(null);
   const [error, setError] = useState(null);
   const [metadata, setMetadata] = useState(null);
   const [succeeded, setSucceeded] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [actualName,setActualName] = useState('')
+  const [lastName,setLastName] = useState('')
   const [address,setAddress] = useState('')
   const [city,setCity] = useState('')
   const [province,setProvince] = useState('')
   const [postal_code,setPostalCode] = useState('')
+  const [email,setEmail] = useState('')
   const stripe = useStripe();
   const elements = useElements();
 
   let cartTotal = JSON.parse(sessionStorage.getItem('cart'))
 
   useEffect(() => {
-    const item = {username,actualName,address,city,province,postal_code,price,cartTotal}
+    const item = {actualName,address,city,province,postal_code,email,price,cartTotal}
       createPaymentIntent(item)
       .then((clientSecret) => {
           console.log("clientSecret:")
@@ -42,8 +45,8 @@ const CheckoutForm = ({price,history}) => {
       console.log(clientSecret)
     ev.preventDefault();
     setProcessing(true);
-
-    const item = {username,actualName,address,city,province,postal_code,price,cartTotal}
+    removeItemFromInventory(cartTotal)
+    const item = {actualName,lastName,address,city,province,postal_code,email,price,cartTotal}
 
     createPaymentIntent(item)
     .then((clientSecret) => {
@@ -86,14 +89,10 @@ const CheckoutForm = ({price,history}) => {
   };
 
   const renderSuccess = () => {
-    const item = {username,actualName,address,city,province,postal_code,price,cartTotal}
+    const item = {actualName,address,city,province,postal_code,price,cartTotal}
   };
 
   const renderForm = () => {
-      console.log("stripe")
-      console.log(stripe)
-      console.log("clientSecret")
-      console.log(clientSecret)
     const options = {
       style: {
         base: {
@@ -112,16 +111,31 @@ const CheckoutForm = ({price,history}) => {
       },
     };
 
+    const formStyles = {
+      margin: '0 0 8% 0',
+      display:'flex',
+      maxWidth:'100% !important'
+    }
+
+    const outerStyles = {
+      justifyContent:'spaceBetween',
+      width:'13%'
+    }
+
+    const innerStyles = {
+      justifyContent:'spaceBetween',
+      width:'74%'
+    }
+
     return (
-      <form onSubmit={handleSubmit}>
-        <div className="sr-combo-inputs">
-          <div className="sr-combo-inputs-row">
-          <FormGroup>
-          <Row >
-            <Col md={3}>
-                <FormGroup>
+      <div style={formStyles}>
+        <div style={outerStyles}></div>
+      <Form style={innerStyles} onSubmit={handleSubmit}>
+
+      <div className="form-row">
+                <FormGroup className="col-md-6">
                 <Label for="name">Name</Label>
-                            <input
+                            <Input
                             type="text"
                             id="name"
                             name="name"
@@ -132,93 +146,92 @@ const CheckoutForm = ({price,history}) => {
                             value={actualName}
                             />
                 </FormGroup>
-                </Col>
-
-                <Col md={3}>
-                    <FormGroup>
-                    <Label for="address">Last Name</Label>
-                        <input
+                
+                    <FormGroup className="col-md-6">
+                    <Label for="lastName">Last Name</Label>
+                        <Input
                         type="text"
                         id="lastName"
                         name="lastName"
                         placeholder="Last name"
                         className="sr-input"
-                        // onChange={e => setAddress(e.target.value)}
-                        value={address}
+                        onChange={e => setLastName(e.target.value)}
+                        value={lastName}
                         />
                     </FormGroup>
-                </Col>
-            </Row>
-            
-            <Row>
-            <Col md={3}>
-            <FormGroup>
-            <Label for="address">Address</Label>
-                        <input
-                        type="text"
-                        id="address"
-                        name="Address"
-                        placeholder="Address"
-                        className="sr-input"
-                        onChange={e => setAddress(e.target.value)}
-                        value={address}
-                        />
-            </FormGroup>
-            </Col>
-            <Col md={3}>
-            <FormGroup>
-            <Label for="address">City</Label>
-            <input
-              type="text"
-              id="city"
-              name="City"
-              placeholder="City"
-              className="sr-input"
-              onChange={e => setCity(e.target.value)}
-              value={city}
-              />
-            </FormGroup>
-            </Col>
-        </Row>
-        <Row>
-        <Col md={3}>
-          <FormGroup>
-          <Label for="address">State</Label>
-              <input
-              type="text"
-              id="province"
-              name="province"
-              placeholder="State"
-              className="sr-input"
-              onChange={e => setProvince(e.target.value)}
-              value={province}
-              />
-          </FormGroup>
-        </Col>
+              </div>
+          <div className="form-row">
+                  <FormGroup className="col-md-6">
+                  <Label for="address">Address</Label>
+                              <Input
+                              type="text"
+                              id="address"
+                              name="Address"
+                              placeholder="Address"
+                              className="sr-input"
+                              onChange={e => setAddress(e.target.value)}
+                              value={address}
+                              />
+                  </FormGroup>
 
-        <Col md={3}>
-          <FormGroup>
-          <Label for="address">Postal Code</Label>
-              <input
-              type="text"
-              id="postal_code"
-              name="postal_code"
-              placeholder="Postal Code"
-              className="sr-input"
-              onChange={e => setPostalCode(e.target.value)}
-              value={postal_code}
-              />
-          </FormGroup>
-        </Col>
-    </Row>
-          <div className="sr-combo-inputs-row">
+                  <FormGroup className="col-md-6">
+                  <Label for="address">City</Label>
+                  <Input
+                    type="text"
+                    id="city"
+                    name="City"
+                    placeholder="City"
+                    className="sr-input"
+                    onChange={e => setCity(e.target.value)}
+                    value={city}
+                    />
+                  </FormGroup>
+            </div>
+            <div className="form-row">
+                  <FormGroup className="col-md-6">
+                  <Label for="address">State</Label>
+                      <Input
+                      type="text"
+                      id="province"
+                      name="province"
+                      placeholder="State"
+                      className="sr-input"
+                      onChange={e => setProvince(e.target.value)}
+                      value={province}
+                      />
+                  </FormGroup>
+                
+                  <FormGroup className="col-md-6">
+                  <Label for="address">Postal Code</Label>
+                      <Input
+                      type="text"
+                      id="postal_code"
+                      name="postal_code"
+                      placeholder="Postal Code"
+                      className="sr-input"
+                      onChange={e => setPostalCode(e.target.value)}
+                      value={postal_code}
+                      />
+                  </FormGroup>
+                
+                  <FormGroup className="col-md-12">
+                  <Label for="address">Email</Label>
+                      <Input
+                      type="text"
+                      id="email"
+                      name="email"
+                      placeholder="Email"
+                      className="sr-input"
+                      onChange={e => setEmail(e.target.value)}
+                      value={email}
+                      />
+                  </FormGroup>
+          </div>
+
             <CardElement
               className="sr-input sr-card-element"
               options={options}
               />
-              </div>
-              </FormGroup>
-              </div>
 
         {error && <div className="message sr-field-error">{error}</div>}
 
@@ -227,8 +240,10 @@ const CheckoutForm = ({price,history}) => {
           >
             {processing ? "Processing…" : "Pay"}
         </button>
-          </div>
-      </form>
+          
+      </Form>
+      <div style={outerStyles}></div>
+      </div>
     );
   };
 

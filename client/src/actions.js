@@ -31,10 +31,11 @@ export const changeLimitReached = async (id,dispatch) => {
         dispatch({type:"FETCH_ALL_MASKS",payload:fetchedMasks.data}) 
 }
 
-export const removeItemFromInventory = async (id,count) => {
-    console.log(id)
-    const items = {id, count}
-        const res = await axios.post('/remove-item-from-inventory',{items})
+export const removeItemFromInventory = async cartTotal => {
+    console.log("cartTotal")
+    console.log(typeof cartTotal)
+    console.log(cartTotal)
+        const res = await axios.post('/remove-item-from-inventory',{cartTotal})
 }
 
 export const getPublicStripeKey = options => {
@@ -63,11 +64,11 @@ export const getPublicStripeKey = options => {
   };
 
   export const createPaymentIntent = async item => {
-    const {username,actualName,address,city,province,postal_code,price,cartTotal} = item;
+    const {actualName,lastName,address,city,province,postal_code,price,cartTotal} = item;
     //   dispatch({type:"CREATE_ORDER",payload:item})
     const options = {
-        username,
         actualName,
+        lastName,
         cartTotal,
         address,
         city,
@@ -81,6 +82,8 @@ export const getPublicStripeKey = options => {
   };
   
   export const createOrder = async item =>{
+    console.log("item:")
+    console.log(item)
     const res = await axios.post('/create-order', item);
         console.log("new order created")        
 }

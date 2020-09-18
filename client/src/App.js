@@ -1,5 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react'
 import AuthContext from './AuthContext'
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import {fetchAllMasks,filterMasks,changeLimitReached,removeItemFromInventory} from './actions'
 import {Link,withRouter} from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles';
@@ -34,10 +35,13 @@ const App = ({history}) => {
 
     const [emailFocus, setEmailFocus] = React.useState(false);
     const [quantity, setQuantities] = useState({})
-
+    
     let sessionCartItems = JSON.parse(sessionStorage.getItem('cart'))
-
+    
+    const [filterValue, setFilterValue] = useState({people:false,animals:false,flowers:false})
     const [values, setValues] = useState({people:false,animals:false,flowers:false});
+    const mobileSize = useMediaQuery('(max-width:600px)');
+    const tabletSize = useMediaQuery('(max-width:800px)');
 
     const useStyles = makeStyles(theme => ({
         paper: {
@@ -68,10 +72,26 @@ const App = ({history}) => {
           width:'200px',
           height:'160px',
           objectFit:'cover',
-          borderRadius:'4x'
+          borderRadius:'4x',
         },
         scroll:{
-          overflow:'scroll'
+          overflow:'scroll',
+          margin:'15% 0 0 0'
+        },
+        width:{
+          width:0
+        },
+        center:{
+          textAlign:'center'
+        },
+        buttonCenter:{
+          margin:'5px'
+        },
+        fullWidth:{
+          margin:'auto'
+        },
+        buttonMargin:{
+          marginRight:'10px'
         }
       }));
     
@@ -106,10 +126,19 @@ const App = ({history}) => {
     };
 
     const handleChange = e =>{
-      console.log(values)
+      const targetValue = e.target.value;
+      filterMasks(targetValue,dispatch)
+    }
 
-      const myValue = e.target.value;
-      filterMasks(myValue,dispatch)
+    const handleMobileChange = e =>{
+      const targetValue = e.target.value;
+      filterMasks(targetValue,dispatch)
+
+        if(filterValue[targetValue] == null){
+          setFilterValue({...filterValue,[targetValue]:true})
+        } else{
+          setFilterValue({...filterValue,[targetValue]:!filterValue[targetValue]})
+        }
     }
 
     let newTotal;
@@ -158,10 +187,23 @@ const App = ({history}) => {
         <div className={"main"}>
           <div className="section">
             <Container>
-            <Button color="info" type="button"><Link to="/checkout">Go To Checkout</Link></Button>
-              <h2 className="section-title">SCC Masks!</h2>
+              {!mobileSize ? (<Button color="info" type="button"><Link to="/checkout">Go To Checkout</Link></Button>) : null}
               <Row>
-                <Col md="3">
+                {mobileSize || tabletSize ? (
+                <div className={classes.fullWidth}>
+                  <Button color={filterValue["animals"] == true ? "success" : "info"} type="button" className={classes.buttonCenter} value="animals" onClick={e => handleMobileChange(e)}>
+                      Animals
+                  </Button>
+                  <Button color={filterValue["flowers"] == true ? "success" : "info"} type="button" className={classes.buttonCenter} value="flowers" onClick={e => handleMobileChange(e)}>
+                      Flowers
+                  </Button>
+                  <Button color={filterValue["people"] == true ? "success" : "info"} type="button" className={classes.buttonCenter} value="people" onClick={e => handleMobileChange(e)}>
+                      People
+                  </Button>
+                </div>
+                ):(
+                  <Col md="3">
+                  <h2 className="section-title">SCC Masks!</h2>
                   <div className="collapse-panel">
                     <CardBody>
                       <Card className="card-refine card-plain">
@@ -228,7 +270,7 @@ const App = ({history}) => {
                     </CardBody>
                   </div>
                 </Col>
-
+                )}
             <Col md="9">
                 <Row>
             {allMasks && allMasks.map(post =>{
@@ -266,7 +308,7 @@ const App = ({history}) => {
                 <>
                     <Col lg="4" md="6">
                       <Card className="card-product card-plain">
-                      <div className="card-image">
+                      <div className={"card-image",classes.center}>
                           <a onClick={(e) => history.push(`/product-page/${post._id}`)}>
                             <img
                               className={classes.clickable}
@@ -281,19 +323,22 @@ const App = ({history}) => {
                                 <CardTitle className="card-description">${post.price}</CardTitle>
                                 <CardTitle>
                                     <Button 
-                                        color="primary" 
-                                        size="small" 
+                                        color="info" 
+                                        size={mobileSize || tabletSize  ? "lg" : "regular"}
                                         variant="contained"
-                                        disabled={!disabled} 
+                                        disabled={!disabled}
+                                        className={classes.buttonMargin}
                                         onClick={() => removeItemFromCart(id,title,price,url)}>
                                           -
                                       </Button>
-
+                                      {" "}
+                                      {" "}
                                     <Button 
-                                        color="primary" 
-                                        size="small" 
+                                        color="info" 
+                                        size={mobileSize || tabletSize ? "lg" : "regular"}
                                         variant="contained" 
                                         name={id}
+                                        className={classes.buttonMargin}
                                         disabled={limitReached}
                                         onClick={e => addItemToCart(id,title,price,url)}>
                                         +

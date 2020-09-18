@@ -5115,6 +5115,12 @@ img {
 .card .card-image {
   position: relative; }
 
+  @media screen and (max-width:700px){
+    .card-image{
+      text-align: center !important;
+    }
+  }
+
 .card .card-footer div {
   display: inline-block; }
 
