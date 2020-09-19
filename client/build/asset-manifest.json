@@ -1,0 +1,24 @@
+{
+  "files": {
+    "main.css": "/static/css/main.e465adba.chunk.css",
+    "main.js": "/static/js/main.eda1549b.chunk.js",
+    "main.js.map": "/static/js/main.eda1549b.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.09b85ec0.js",
+    "runtime-main.js.map": "/static/js/runtime-main.09b85ec0.js.map",
+    "static/js/2.75a1cc56.chunk.js": "/static/js/2.75a1cc56.chunk.js",
+    "static/js/2.75a1cc56.chunk.js.map": "/static/js/2.75a1cc56.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.cd76f678247ec2f96d933bf188d962e0.js": "/precache-manifest.cd76f678247ec2f96d933bf188d962e0.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/main.e465adba.chunk.css.map": "/static/css/main.e465adba.chunk.css.map",
+    "static/js/2.75a1cc56.chunk.js.LICENSE.txt": "/static/js/2.75a1cc56.chunk.js.LICENSE.txt",
+    "static/media/bg3.jpg": "/static/media/bg3.3ef4d889.jpg",
+    "static/media/now-ui-dashboard.scss?v=1.4.0": "/static/media/nucleo-outline.8ebec31f.woff2"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.09b85ec0.js",
+    "static/js/2.75a1cc56.chunk.js",
+    "static/css/main.e465adba.chunk.css",
+    "static/js/main.eda1549b.chunk.js"
+  ]
+}
