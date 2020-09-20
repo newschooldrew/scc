@@ -24,10 +24,9 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
     "server": "nodemon server",
     "client": "cd client && yarn run start",
-    "heroku-postbuild":"NPM_CONFIG_PRODUCTION=false yarn add --prefix client && yarn run build --prefix client",
+    "heroku-postbuild":"YARN_PRODUCTION=false yarn cd client && yarn run build",
     "dev": "concurrently \"yarn run server\" \"yarn run client\""
   },
   "eslintConfig": {
