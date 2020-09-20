@@ -22,8 +22,9 @@
     "stripe": "^8.95.0",
     "twilio": "^3.49.2"
   },
+  "main":"server.js",
   "scripts": {
-    "start": "react-scripts start",
+    "start": "node server",
     "server": "node server",
     "client": "cd client && yarn run start",
     "dev": "concurrently \"yarn run server\" \"yarn run client\"",
@@ -31,6 +32,9 @@
   },
   "eslintConfig": {
     "extends": "react-app"
+  },
+  "engines": {
+    "node": "10.15.3"
   },
   "browserslist": {
     "production": [
