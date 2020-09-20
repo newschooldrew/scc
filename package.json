@@ -1,7 +1,8 @@
 {
   "name": "scc",
-  "version": "0.1.0",
-  "main":"server.js",
+  "version": "1.0.0",
+  "license": "MIT",
+  "main": "server.js",
   "engines": {
     "node": "10.15.3",
     "npm": "6.4.1"
