@@ -27,8 +27,8 @@
     "start": "react-scripts start",
     "server": "nodemon server",
     "client": "cd client && yarn run start",
-    "heroku-postbuild": "YARN_PRODUCTION=false cd client && yarn && yarn run build",
-    "dev": "concurrently \"yarn run server\" \"yarn run client\""
+    "dev": "concurrently \"yarn run server\" \"yarn run client\"",
+    "heroku-postbuild": "YARN_PRODUCTION=true cd client && yarn && yarn run build"
   },
   "eslintConfig": {
     "extends": "react-app"
