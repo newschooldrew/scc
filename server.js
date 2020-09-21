@@ -11,7 +11,15 @@ const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 require('dotenv').config()
 
-mongoose.connect(process.env.mongoUri,{ useNewUrlParser: true ,useUnifiedTopology: true})
+let mongoUri;
+
+if (process.env.mongoUri == 'production'){
+  mongoUri = process.env.mongoUri
+} else{
+  mongoUri = keys.mongoUri
+}
+
+mongoose.connect(mongoUri,{ useNewUrlParser: true ,useUnifiedTopology: true})
 mongoose.connection
     .once('open',() => console.log('db is running'))
     .on('error',(err)=>{
@@ -74,19 +82,19 @@ app.post("/filter-masks", async (req, res) => {
 
 //////////// remove item from cart db /////////////
 
-app.post("/remove-item-from-cart-db", async (req, res) => {
-    const {id} = req.body;
-    console.log(value)
+// app.post("/remove-item-from-cart-db", async (req, res) => {
+//     const {id} = req.body;
+//     console.log(value)
     
-    const foundMask = await Mask.findByIdAndUpdate(
-      {_id:id},
-      {$inc:{quantity: -1}}
-  )
+//     const foundMask = await Mask.findByIdAndUpdate(
+//       {_id:id},
+//       {$inc:{quantity: -1}}
+//   )
   
-  console.log("foundMask:")
-  console.log(foundMask)
-  res.send(foundMask)
-})
+//   console.log("foundMask:")
+//   console.log(foundMask)
+//   res.send(foundMask)
+// })
 
 //////////// change limit reached /////////////
 
@@ -102,12 +110,12 @@ app.post("/change-limit-reached", async (req, res) => {
 //////////// remove item from inventory /////////////
 
 app.post("/remove-item-from-inventory", async (req, res) => {
+  const {cartTotal} = req.body;
+  JSON.parse(cartTotal)
     console.log("req.body:");
-    console.log(req.body);
-    console.log(req.body.cartTotal);
-
-    const {cartTotal} = req.body;
+    console.log(cartTotal);
     console.log(typeof cartTotal)
+
     cartTotal.map(async item =>{
       const foundMask = await Mask.findByIdAndUpdate(
           {_id:item.id},

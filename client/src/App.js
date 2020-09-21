@@ -102,6 +102,7 @@ const App = ({history}) => {
     },[])
 
     useEffect(() =>{
+      fetchAllMasks(dispatch)
       if(cartItems && cartItems.length > 0){
         try{
             
@@ -148,7 +149,7 @@ const App = ({history}) => {
         const item = {id,title,price,url};
         dispatch({type:"ADD_ITEM_TO_CART",payload:item})
         let foundItem;
-        removeItemFromInventory(id)
+        removeItemFromInventory(sessionCartItems)
 
         let existingNum;
           if(sessionStorage.getItem(id)){
@@ -331,8 +332,7 @@ const App = ({history}) => {
                                         onClick={() => removeItemFromCart(id,title,price,url)}>
                                           -
                                       </Button>
-                                      {" "}
-                                      {" "}
+                                      {"  "}
                                     <Button 
                                         color="info" 
                                         size={mobileSize || tabletSize ? "lg" : "regular"}

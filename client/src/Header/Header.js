@@ -30,17 +30,7 @@ const Header = ({history,match}) => {
         if(cartItemCount == null){
             sessionStorage.setItem('cartTotal',0)
         } 
-        if(cartItems && cartItems.length > 0){
-            try{
-                
-                sessionStorage.setItem('cart',JSON.stringify(cartItems))
-                newTotal = cartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
-                sessionStorage.setItem('cartTotal',newTotal)
-                
-            } catch(e){
-                console.log("cartItems is empty")
-            }
-        }
+            // sessionStorage.setItem(`${id}`,[{...foundItem,hitCount:1}])
           
 
     },[cartItems,hitItem])
