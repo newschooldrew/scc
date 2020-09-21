@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const OrderSchema = require('./order').schema;
+const OrderSchema = require('./Order').schema;
 const twilio = require('twilio');
 require('dotenv').config()
 const {Schema} = mongoose;

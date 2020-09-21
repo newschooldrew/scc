@@ -9,7 +9,7 @@
     "yarn": "1.22.4"
   },
   "scripts": {
-    "start": "node server",
+    "start": "node server.js",
     "server": "node server",
     "client": "cd client && yarn run start",
     "dev": "concurrently \"yarn run server\" \"yarn run client\"",
