@@ -30,7 +30,17 @@ const Header = ({history,match}) => {
         if(cartItemCount == null){
             sessionStorage.setItem('cartTotal',0)
         } 
-            // sessionStorage.setItem(`${id}`,[{...foundItem,hitCount:1}])
+        if(cartItems && cartItems.length > 0){
+            try{
+                
+                sessionStorage.setItem('cart',JSON.stringify(cartItems))
+                newTotal = cartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
+                sessionStorage.setItem('cartTotal',newTotal)
+                
+            } catch(e){
+                console.log("cartItems is empty")
+            }
+        }
           
 
     },[cartItems,hitItem])
@@ -204,18 +214,6 @@ let fontStyle = {
     const clickable = {
         cursor:'pointer',
         margin: '0 25px 0 0'
-    }
-
-    if(cartItems && cartItems.length > 0){
-        try{
-            
-            sessionStorage.setItem('cart',JSON.stringify(cartItems))
-            newTotal = cartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
-            sessionStorage.setItem('cartTotal',newTotal)
-            
-        } catch(e){
-            console.log("cartItems is empty")
-        }
     }
       
     const classes = useStyles();
