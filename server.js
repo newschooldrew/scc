@@ -11,7 +11,7 @@ const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 require('dotenv').config()
 
-mongoose.connect(keys.mongoUri,{ useNewUrlParser: true ,useUnifiedTopology: true})
+mongoose.connect(process.env.mongoUri,{ useNewUrlParser: true ,useUnifiedTopology: true})
 mongoose.connection
     .once('open',() => console.log('db is running'))
     .on('error',(err)=>{
