@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState,useRef} from 'react'
 import AuthContext from './AuthContext'
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import {fetchAllMasks,filterMasks,changeLimitReached,removeItemFromInventory} from './actions'
+import {fetchAllMasks,filterMasks} from './actions'
 import {Link,withRouter} from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles';
 import CustomButton from './CustomButton/CustomButton'
@@ -119,11 +119,11 @@ const App = ({history}) => {
           console.log("cartItems")
           console.log(cartItems)
 
-            if(sessionCartItems == null){
-              newTotal = cartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
-            } else{
-              newTotal = sessionCartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
-            }
+          newTotal = cartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
+            // if(sessionCartItems == null){
+            // } else{
+            //   newTotal = sessionCartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
+            // }
 
         } catch(e){
             console.log("cartItems is empty")
@@ -158,50 +158,6 @@ const App = ({history}) => {
     }
 
     let newTotal;
-
-    const addItemToCart = (id,title,price,url,currentItem) =>{
-        console.log(state)
-        const item = {id,title,price,url};
-        dispatch({type:"ADD_ITEM_TO_CART",payload:item})
-        let foundItem;
-        removeItemFromInventory(id,sessionCartItems)
-
-        let existingNum;
-          if(sessionStorage.getItem(id)){
-            existingNum = parseInt(sessionStorage.getItem(id));
-            console.log("existingNum exists")
-            console.log(existingNum)
-            sessionStorage.setItem(`${id}`,existingNum + 1)
-          } else{
-            console.log("existingNum does not exist")
-            sessionStorage.setItem(`${id}`,1)
-          }
-
-          // itemsRef.current = itemsRef.current.slice(i, i + 1)
-          // if(itemsRef.current == 2){
-          //   console.log("current ref hit!!")
-          // }
-
-          // itemsRef.current[i] += 1
-          // console.log("itemsRef")
-          // console.log(itemsRef.current)
-          // console.log(currentItem.ref)
-    }
-
-    // const removeItemFromCart = (id,title,price) =>{
-    //     const item = {id,title,price};
-    //     dispatch({type:"REMOVE_ITEM_FROM_CART",payload:item})
-    //     let myCachedTotal = JSON.parse(sessionStorage.getItem('cartTotal'))
-
-    //     if(myCachedTotal == 1){
-    //         sessionStorage.removeItem('cart');
-    //         sessionStorage.setItem('cartTotal',0)
-    //     }
-        
-    //         let existingNum = parseInt(sessionStorage.getItem(id));
-    //         sessionStorage.setItem(`${id}`,existingNum - 1)
-
-    // }
 
     return (
         <>

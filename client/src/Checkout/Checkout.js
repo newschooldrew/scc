@@ -1,5 +1,5 @@
 /*eslint-disable*/
-import React, {useContext} from "react";
+import React, {useContext,useRef} from "react";
 import AuthContext from '../AuthContext'
 import {Link} from 'react-router-dom'
 // nodejs library that concatenates classes
@@ -42,35 +42,62 @@ const useStyles = makeStyles(shoppingCartStyle);
 
 function ShoppingCartPage({history}) {
   const {state,dispatch} = useContext(AuthContext)
-  const {allMasks,cartItems} = state;
+  const {allMasks,cartItems,hitCount} = state;
   const mobileSize = useMediaQuery('(max-width:600px)');
   const stripePromise = getPublicStripeKey().then(key => {
     console.log("key:")
     console.log(key)
     return loadStripe(key)
   });
+  let hitButton = useRef(0),
+      sessionCartItems = JSON.parse(sessionStorage.getItem('cart'))
 
   React.useEffect(() => {
-    console.log("cartItems:")
-    console.log(cartItems)
-    window.scrollTo(0, 0);
-    document.body.scrollTop = 0;
+
     fetchAllMasks(dispatch)
   },[]);
 
-  let limitReached;
+  React.useEffect(() => {
+    fetchAllMasks(dispatch)
+    if(cartItems && cartItems.length > 0){
+      try{
+          
+          sessionStorage.setItem('cart',JSON.stringify(cartItems))
+          newTotal = cartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
+          sessionStorage.setItem('cartTotal',newTotal)
 
+        console.log("sessionCartItems")
+        console.log(sessionCartItems)
+        console.log("cartItems")
+        console.log(cartItems)
+
+        newTotal = cartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
+          // if(sessionCartItems == null){
+          // } else{
+          //   newTotal = sessionCartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
+          // }
+
+      } catch(e){
+          console.log("cartItems is empty")
+      }
+  }
+  },[cartItems,hitCount]);
+  
   const addItemToCart = (id,title,price) =>{
-    console.log("add item from cart")
     const item = {id,title,price};
     dispatch({type:"ADD_ITEM_TO_CART",payload:item})
-    console.log("add item to cart in checkout being hit")
+    dispatch({type:"HIT_COUNT",payload:hitButton.current +=1})
+    
+    hitButton.current += 1
+
+    let existingNum
     if(sessionStorage.getItem(id)){
-      let existingNum = parseInt(sessionStorage.getItem(id));
-      console.log("existingNum exists")
-      console.log(existingNum)
+      existingNum = parseInt(sessionStorage.getItem(id));
       sessionStorage.setItem(`${id}`,existingNum + 1)
-    } else{console.log("no luck this time")}
+    } else{
+      console.log("existingNum does not exist")
+      sessionStorage.setItem(`${id}`,1)
+    }
 }
 
 const goBackToShopping = () =>{
@@ -78,20 +105,18 @@ const goBackToShopping = () =>{
 }
 
 const removeItemFromCart = (id,title,price) =>{
-  console.log("remove item from cart")
   const item = {id,title,price};
   dispatch({type:"REMOVE_ITEM_FROM_CART",payload:item})
+  dispatch({type:"HIT_COUNT",payload:hitButton.current -=1})
   let myCachedTotal = JSON.parse(sessionStorage.getItem('cartTotal'))
-  console.log("myCachedTotal:")
-  console.log(myCachedTotal)
+ 
+  hitButton.current -= 1
+
   if(myCachedTotal == 1){
-      console.log("Clear cart")
       sessionStorage.removeItem('cart');
       sessionStorage.setItem('cartTotal',0)
   }
     let existingNum = parseInt(sessionStorage.getItem(id));
-    console.log("existingNum exists")
-    console.log(existingNum)
     sessionStorage.setItem(`${id}`,existingNum - 1)
 }
 
@@ -183,7 +208,6 @@ if(!cartItems && !sessionItems) return (<div>loading checkout items</div>)
                       <div className={classes.container}>
                         <Card plain>
                           <CardBody plain>
-                            {/* <h3 className={classes.cardTitle}>Shopping Cart</h3> */}
                             <Button color="info" onClick={() => goBackToShopping()}>Back to Shopping</Button>
                     {(() => {
 
@@ -195,7 +219,6 @@ if(!cartItems && !sessionItems) return (<div>loading checkout items</div>)
                       return(
                         sessionItems.map((item,idx) =>{
                           const {id,title,price,quantity} = item;
-                          let limitReached;
                           console.log("quantity:")
                           console.log(quantity)
 

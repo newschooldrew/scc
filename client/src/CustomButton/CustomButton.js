@@ -1,6 +1,5 @@
 import React, {useRef,useContext} from 'react'
 import AuthContext from '../AuthContext'
-import {removeItemFromInventory} from '../actions'
 
 const CustomButton = ({type,id,title,price,url,qty}) => {
     const {state,dispatch} = useContext(AuthContext)
@@ -9,6 +8,22 @@ const CustomButton = ({type,id,title,price,url,qty}) => {
     let sessionCartItems = JSON.parse(sessionStorage.getItem('cart'))
 
     let hitButton = useRef(0)
+
+    
+    const addItemToCart = (id,title,price,url) =>{
+        const item = {id,title,price,url};
+        dispatch({type:"ADD_ITEM_TO_CART",payload:item})
+        dispatch({type:"HIT_COUNT",payload:hitButton.current +=1})
+    
+        let existingNum;
+          if(sessionStorage.getItem(id)){
+            existingNum = parseInt(sessionStorage.getItem(id));
+            sessionStorage.setItem(`${id}`,existingNum + 1)
+          } else{
+            console.log("existingNum does not exist")
+            sessionStorage.setItem(`${id}`,1)
+          }
+    }
     
     const removeItemFromCart = (id,title,price) =>{
         const item = {id,title,price};
@@ -21,35 +36,10 @@ const CustomButton = ({type,id,title,price,url,qty}) => {
             sessionStorage.setItem('cartTotal',0)
         }
         hitButton.current -= 1
-        console.log(`${id } hitButton:`)
-        console.log(hitButton)
+
             let existingNum = parseInt(sessionStorage.getItem(id));
             sessionStorage.setItem(`${id}`,existingNum - 1)
     
-    }
-    
-    const addItemToCart = (id,title,price,url) =>{
-        const item = {id,title,price,url};
-        dispatch({type:"ADD_ITEM_TO_CART",payload:item})
-        dispatch({type:"HIT_COUNT",payload:hitButton.current +=1})
-        let foundItem;
-        removeItemFromInventory(id,sessionCartItems)
-    
-        let existingNum;
-          if(sessionStorage.getItem(id)){
-            existingNum = parseInt(sessionStorage.getItem(id));
-            sessionStorage.setItem(`${id}`,existingNum + 1)
-          } else{
-            console.log("existingNum does not exist")
-            sessionStorage.setItem(`${id}`,1)
-          }
-
-          hitButton.current += 1
-          console.log(`${id } hitButton:`)
-          console.log(hitButton)
-          if(hitButton.current ==  qty){
-              console.log("hitButton limit hit!!")
-          }
     }
 
     let limitReached,
@@ -73,18 +63,6 @@ const CustomButton = ({type,id,title,price,url,qty}) => {
         } catch(e){
             console.log("e")
         }
-        // found = sessionCartItems.find((e,i) => e.title == title)
-        // try{
-        //     if(found.quantity){
-        //         console.log(found.quantity)
-        //         disabled = false
-        //     }else{
-        //         console.log(found.quantity)
-        //         disabled = true
-        //     }
-        // } catch(e){
-        //     console.log("")
-        // }
     }
 
     return (<>

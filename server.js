@@ -111,7 +111,7 @@ app.post("/change-limit-reached", async (req, res) => {
 
 app.post("/remove-item-from-inventory", async (req, res) => {
   const {id,cartTotal} = req.body;
-  JSON.parse(cartTotal)
+  // JSON.parse(cartTotal)
     console.log("req.body:");
     console.log(req.body);
     console.log(typeof cartTotal)

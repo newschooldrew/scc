@@ -35,7 +35,7 @@ const Header = ({history,match}) => {
                     $set:sessionCartItems
                 })
                 sessionStorage.setItem('cart',JSON.stringify(cartItems))
-                newTotal = sessionCartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
+                newTotal = cartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
                 sessionStorage.setItem('cartTotal',newTotal)
     
             } catch(e){
@@ -54,7 +54,7 @@ const Header = ({history,match}) => {
                     $set:sessionCartItems.length
                 })
                 sessionStorage.setItem('cart',JSON.stringify(cartItems))
-                newTotal = sessionCartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
+                newTotal = cartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
                 sessionStorage.setItem('cartTotal',newTotal)
     
             } catch(e){
@@ -237,14 +237,6 @@ let fontStyle = {
     }
       
     const classes = useStyles();
-    
-    const showNotification = () =>{
-        // addToast('An order was created', { appearance: 'success' }, () => console.log("toast shown"))
-    }
-
-    const showAlerts = () =>{
-        // dispatch({type:"TOGGLE_ALERT_DROPDOWN",payload:!toggleAlertDropDown})
-    }
 
     return (
         <div className={classes.root}>
