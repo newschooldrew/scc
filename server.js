@@ -110,15 +110,15 @@ app.post("/change-limit-reached", async (req, res) => {
 //////////// remove item from inventory /////////////
 
 app.post("/remove-item-from-inventory", async (req, res) => {
-  const {cartTotal} = req.body;
+  const {id,cartTotal} = req.body;
   JSON.parse(cartTotal)
     console.log("req.body:");
-    console.log(cartTotal);
+    console.log(req.body);
     console.log(typeof cartTotal)
 
     cartTotal.map(async item =>{
       const foundMask = await Mask.findByIdAndUpdate(
-          {_id:item.id},
+          {_id:id},
           {$inc:{quantity: -item.quantity}},
           {new:true}
       )

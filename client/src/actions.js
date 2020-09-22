@@ -31,11 +31,14 @@ export const changeLimitReached = async (id,dispatch) => {
         dispatch({type:"FETCH_ALL_MASKS",payload:fetchedMasks.data}) 
 }
 
-export const removeItemFromInventory = async cartTotal => {
+export const removeItemFromInventory = async (id,cartTotal) => {
     console.log("cartTotal")
     console.log(typeof cartTotal)
     console.log(cartTotal)
-        const res = await axios.post('/remove-item-from-inventory',{cartTotal})
+    const items = {id,cartTotal}
+    console.log("items:")
+    console.log(items)
+        const res = await axios.post('/remove-item-from-inventory',{items})
 }
 
 export const getPublicStripeKey = options => {

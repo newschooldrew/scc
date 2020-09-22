@@ -9,12 +9,12 @@ import Typography from "@material-ui/core/Typography";
 import Button from '@material-ui/core/Button';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import CartDropdown from '../CartDropdown/CartDropdown'
-// import { useToasts } from 'react-toast-notifications'
+import update from 'immutability-helper'
 import {Link} from 'react-router-dom'
 
 const Header = ({history,match}) => {
     const {state,dispatch} = useContext(AuthContext)
-    const {cartItems,toggleCart,hitItem,allMasks} = state;
+    const {cartItems,toggleCart,hitCount} = state;
     // const { addToast } = useToasts()
     let cartAlerts = JSON.parse(sessionStorage.getItem('orderNotification'))
     let cartItemCount = sessionStorage.getItem('cartTotal')
@@ -23,17 +23,47 @@ const Header = ({history,match}) => {
     let newTotal;
     const [toggleStickyUnit,setToggleStickyUnit] = useState(false)
 
-    useEffect(() =>{              
-        sessionCartItems = JSON.parse(sessionStorage.getItem('cart'))
-        cartItemCount = sessionStorage.getItem('cartTotal')
+    useEffect(() =>{
 
         if(cartItemCount == null){
             sessionStorage.setItem('cartTotal',0)
         } 
-            // sessionStorage.setItem(`${id}`,[{...foundItem,hitCount:1}])
+
+        if(sessionCartItems && sessionCartItems.length > 0){
+            try{
+                update(cartItems,{
+                    $set:sessionCartItems
+                })
+                sessionStorage.setItem('cart',JSON.stringify(cartItems))
+                newTotal = sessionCartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
+                sessionStorage.setItem('cartTotal',newTotal)
+    
+            } catch(e){
+                console.log("cartItems is empty")
+            }
+        }
+    },[])
+
+    useEffect(() =>{              
+        if(cartItemCount == null){
+            sessionStorage.setItem('cartTotal',0)
+        } 
+        if(sessionCartItems && sessionCartItems.length > 0){
+            try{
+                update(cartItemCount,{
+                    $set:sessionCartItems.length
+                })
+                sessionStorage.setItem('cart',JSON.stringify(cartItems))
+                newTotal = sessionCartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
+                sessionStorage.setItem('cartTotal',newTotal)
+    
+            } catch(e){
+                console.log("cartItems is empty")
+            }
+        }
           
 
-    },[cartItems,hitItem])
+    },[cartItems,hitCount,cartItemCount])
 
 
 
@@ -252,14 +282,14 @@ let fontStyle = {
                     </div>
                             <div>{orderCountItems}</div>
                             {!mobileSize ? 
-                    (<div style={mobileSize ? mobCartSectionStyle : cartSectionStyle}>
-                        {history.location.pathname == '/receipt' ? null :(<>
-                        <Button edge="start" onClick={handleCartClick} className={classes.menuButton} color="inherit">
-                        <ShoppingCartIcon style={buttonStyle} />
-                        </Button>
-                               <div className={classes.pContainer}><p style={fontStyle}>Cart Items: {cartItemCount}</p></div></>)}
-                        {toggleCart ? (<CartDropdown cartItems={sessionCartItems} />):null}
-                    </div>)
+                                (<div style={mobileSize ? mobCartSectionStyle : cartSectionStyle}>
+                                    {history.location.pathname == '/receipt' ? null :(<>
+                                    <Button edge="start" onClick={handleCartClick} className={classes.menuButton} color="inherit">
+                                    <ShoppingCartIcon style={buttonStyle} />
+                                    </Button>
+                                        <div className={classes.pContainer}><p style={fontStyle}>Cart Items: {cartItemCount}</p></div></>)}
+                                    {toggleCart ? (<CartDropdown cartItems={sessionCartItems} />):null}
+                                </div>)
                         :null}
                 </div>  
                 

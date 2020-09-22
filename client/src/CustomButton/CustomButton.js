@@ -1,0 +1,113 @@
+import React, {useRef,useContext} from 'react'
+import AuthContext from '../AuthContext'
+import {removeItemFromInventory} from '../actions'
+
+const CustomButton = ({type,id,title,price,url,qty}) => {
+    const {state,dispatch} = useContext(AuthContext)
+    const {allMasks,cartItems} = state;
+
+    let sessionCartItems = JSON.parse(sessionStorage.getItem('cart'))
+
+    let hitButton = useRef(0)
+    
+    const removeItemFromCart = (id,title,price) =>{
+        const item = {id,title,price};
+        dispatch({type:"REMOVE_ITEM_FROM_CART",payload:item})
+        dispatch({type:"HIT_COUNT",payload:hitButton.current -=1})
+        let myCachedTotal = JSON.parse(sessionStorage.getItem('cartTotal'))
+    
+        if(myCachedTotal == 1){
+            sessionStorage.removeItem('cart');
+            sessionStorage.setItem('cartTotal',0)
+        }
+        hitButton.current -= 1
+        console.log(`${id } hitButton:`)
+        console.log(hitButton)
+            let existingNum = parseInt(sessionStorage.getItem(id));
+            sessionStorage.setItem(`${id}`,existingNum - 1)
+    
+    }
+    
+    const addItemToCart = (id,title,price,url) =>{
+        const item = {id,title,price,url};
+        dispatch({type:"ADD_ITEM_TO_CART",payload:item})
+        dispatch({type:"HIT_COUNT",payload:hitButton.current +=1})
+        let foundItem;
+        removeItemFromInventory(id,sessionCartItems)
+    
+        let existingNum;
+          if(sessionStorage.getItem(id)){
+            existingNum = parseInt(sessionStorage.getItem(id));
+            sessionStorage.setItem(`${id}`,existingNum + 1)
+          } else{
+            console.log("existingNum does not exist")
+            sessionStorage.setItem(`${id}`,1)
+          }
+
+          hitButton.current += 1
+          console.log(`${id } hitButton:`)
+          console.log(hitButton)
+          if(hitButton.current ==  qty){
+              console.log("hitButton limit hit!!")
+          }
+    }
+
+    let limitReached,
+        disabled,
+        found;
+    if(sessionStorage.getItem(id) == qty){
+        limitReached = true;
+    }
+
+    if(sessionCartItems && sessionCartItems.length > 0){
+        let found = sessionStorage.getItem(`${id}`)
+
+        try{
+            if(found == 0 || found == null){
+                disabled=false
+            }
+
+            if(found >= 1){
+                disabled=true
+            }
+        } catch(e){
+            console.log("e")
+        }
+        // found = sessionCartItems.find((e,i) => e.title == title)
+        // try{
+        //     if(found.quantity){
+        //         console.log(found.quantity)
+        //         disabled = false
+        //     }else{
+        //         console.log(found.quantity)
+        //         disabled = true
+        //     }
+        // } catch(e){
+        //     console.log("")
+        // }
+    }
+
+    return (<>
+        {type == "positive" ? (
+            <>
+                <button 
+                    onClick={e => addItemToCart(id,title,price,url)}
+                    disabled={limitReached}
+                >
+                    +
+                </button>
+            </>
+        ): (
+            <>
+                <button
+                    onClick={() => removeItemFromCart(id,title,price,url)}
+                    disabled={!disabled}
+                >
+                    -
+                </button>
+            </>
+        )}
+    </>)
+}
+
+export default CustomButton

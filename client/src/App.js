@@ -1,9 +1,10 @@
-import React, {useContext, useEffect, useState} from 'react'
+import React, {useContext, useEffect, useState,useRef} from 'react'
 import AuthContext from './AuthContext'
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import {fetchAllMasks,filterMasks,changeLimitReached,removeItemFromInventory} from './actions'
 import {Link,withRouter} from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles';
+import CustomButton from './CustomButton/CustomButton'
 
 // reactstrap components
 import {
@@ -31,7 +32,7 @@ import {
 const App = ({history}) => {
     let itemsArr = [];
     const {state,dispatch} = useContext(AuthContext)
-    const {allMasks,cartItems} = state;
+    const {allMasks,cartItems,hitCount} = state;
 
     const [emailFocus, setEmailFocus] = React.useState(false);
     const [quantity, setQuantities] = useState({})
@@ -42,6 +43,8 @@ const App = ({history}) => {
     const [values, setValues] = useState({people:false,animals:false,flowers:false});
     const mobileSize = useMediaQuery('(max-width:600px)');
     const tabletSize = useMediaQuery('(max-width:800px)');
+
+    const itemsRef = useRef([]);
 
     const useStyles = makeStyles(theme => ({
         paper: {
@@ -101,6 +104,7 @@ const App = ({history}) => {
         fetchAllMasks(dispatch)
     },[])
 
+
     useEffect(() =>{
       fetchAllMasks(dispatch)
       if(cartItems && cartItems.length > 0){
@@ -110,11 +114,22 @@ const App = ({history}) => {
             newTotal = cartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
             sessionStorage.setItem('cartTotal',newTotal)
 
+          console.log("sessionCartItems")
+          console.log(sessionCartItems)
+          console.log("cartItems")
+          console.log(cartItems)
+
+            if(sessionCartItems == null){
+              newTotal = cartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
+            } else{
+              newTotal = sessionCartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
+            }
+
         } catch(e){
             console.log("cartItems is empty")
         }
     }
-    },[cartItems])
+    },[cartItems,hitCount])
 
     // collapse states and functions
     const [collapses, setCollapses] = React.useState([1]);
@@ -144,12 +159,12 @@ const App = ({history}) => {
 
     let newTotal;
 
-    const addItemToCart = (id,title,price,url) =>{
+    const addItemToCart = (id,title,price,url,currentItem) =>{
         console.log(state)
         const item = {id,title,price,url};
         dispatch({type:"ADD_ITEM_TO_CART",payload:item})
         let foundItem;
-        removeItemFromInventory(sessionCartItems)
+        removeItemFromInventory(id,sessionCartItems)
 
         let existingNum;
           if(sessionStorage.getItem(id)){
@@ -161,26 +176,32 @@ const App = ({history}) => {
             console.log("existingNum does not exist")
             sessionStorage.setItem(`${id}`,1)
           }
+
+          // itemsRef.current = itemsRef.current.slice(i, i + 1)
+          // if(itemsRef.current == 2){
+          //   console.log("current ref hit!!")
+          // }
+
+          // itemsRef.current[i] += 1
+          // console.log("itemsRef")
+          // console.log(itemsRef.current)
+          // console.log(currentItem.ref)
     }
 
-    const removeItemFromCart = (id,title,price) =>{
-        const item = {id,title,price};
-        dispatch({type:"REMOVE_ITEM_FROM_CART",payload:item})
-        let myCachedTotal = JSON.parse(sessionStorage.getItem('cartTotal'))
-        console.log("myCachedTotal:")
-        console.log(myCachedTotal)
-        if(myCachedTotal == 1){
-            console.log("Clear cart")
-            sessionStorage.removeItem('cart');
-            sessionStorage.setItem('cartTotal',0)
-        }
+    // const removeItemFromCart = (id,title,price) =>{
+    //     const item = {id,title,price};
+    //     dispatch({type:"REMOVE_ITEM_FROM_CART",payload:item})
+    //     let myCachedTotal = JSON.parse(sessionStorage.getItem('cartTotal'))
+
+    //     if(myCachedTotal == 1){
+    //         sessionStorage.removeItem('cart');
+    //         sessionStorage.setItem('cartTotal',0)
+    //     }
         
-            let existingNum = parseInt(sessionStorage.getItem(id));
-            console.log("existingNum exists")
-            console.log(existingNum)
-            sessionStorage.setItem(`${id}`,existingNum - 1)
+    //         let existingNum = parseInt(sessionStorage.getItem(id));
+    //         sessionStorage.setItem(`${id}`,existingNum - 1)
 
-    }
+    // }
 
     return (
         <>
@@ -274,7 +295,7 @@ const App = ({history}) => {
                 )}
             <Col md="9">
                 <Row>
-            {allMasks && allMasks.map(post =>{
+            {allMasks && allMasks.map((post,i) =>{
                 const id = post._id;
                 const title = post.title;
                 const price = post.price;
@@ -284,26 +305,7 @@ const App = ({history}) => {
                 let qty;
                 let limit;
                 let disabled;
-
-                let limitReached;
-                if(sessionStorage.getItem(id) == post.quantity){
-                    limitReached = true;
-                }
-
-                if(sessionCartItems && sessionCartItems.length > 0){
-                  console.log(id)
-                  console.log(sessionCartItems.find(e => console.log(e)))
-                  let foundId = sessionCartItems.filter(e => e.id == id)
-                  console.log(foundId)
-
-                    qty = sessionCartItems.find((e,i) => e.title == post.title)
-                        try{
-                        disabled = qty.quantity;
-                        console.log(disabled)
-                        } catch(e){
-                            console.log("no quantity")
-                        }
-                }
+                let currentItem = itemsRef.current[i]
 
                 return(
                 <>
@@ -323,26 +325,29 @@ const App = ({history}) => {
                             <CardText className="card-description">{post.description}</CardText>
                                 <CardTitle className="card-description">${post.price}</CardTitle>
                                 <CardTitle>
-                                    <Button 
+                                    {/* <Button 
                                         color="info" 
+                                        ref={el => itemsRef.current[i] = el}
                                         size={mobileSize || tabletSize  ? "lg" : "regular"}
                                         variant="contained"
                                         disabled={!disabled}
                                         className={classes.buttonMargin}
-                                        onClick={() => removeItemFromCart(id,title,price,url)}>
-                                          -
-                                      </Button>
+                                        onClick={() => removeItemFromCart(id,title,price,url)} /> */}
+                                          <CustomButton type="negative" id={id} title={title} price={price} url={url} qty={quantity}/>
+                                      
                                       {"  "}
-                                    <Button 
+                                    {/* <Button 
                                         color="info" 
+                                        ref={el => itemsRef.current[i] = el}
                                         size={mobileSize || tabletSize ? "lg" : "regular"}
                                         variant="contained" 
                                         name={id}
                                         className={classes.buttonMargin}
                                         disabled={limitReached}
-                                        onClick={e => addItemToCart(id,title,price,url)}>
-                                        +
-                                      </Button>
+                                        onClick={e => addItemToCart(id,title,price,url,currentItem)}>
+                                        <HitCount type="positive" />
+                                      </Button> */}
+                                          <CustomButton type="positive" id={id} title={title} price={price} url={url} qty={quantity}/>
                                       <p>{post.limitReached}</p>
                                 </CardTitle>
                         </CardBody>

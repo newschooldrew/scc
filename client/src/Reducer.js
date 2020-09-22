@@ -43,6 +43,12 @@ const Reducer = (state,{type,payload}) =>{
                 ...state,
                 toggleCart:!state.toggleCart
                     }   
+    
+    case "HIT_COUNT":
+            return{
+                ...state,
+                hitCount:payload
+                    }   
     case "EMPTY_CART":
         return{
                 ...state,
