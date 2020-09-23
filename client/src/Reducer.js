@@ -9,19 +9,22 @@ const Reducer = (state,{type,payload}) =>{
         }
 
     case "ADD_ITEM_TO_CART":
-        let sessionItems = JSON.parse(sessionStorage.getItem('cart'))
+        let sessionItems = sessionStorage.getItem('cart')
+        // let sessionItems = JSON.parse(sessionStorage.getItem('cart'))
         console.log("sessionItems within reducer")
         console.log(sessionItems)
                 return{
                 ...state,
-                cartItems:addItemToCart(sessionItems || [],payload)
+                cartItems:addItemToCart(JSON.parse(sessionItems) || [],payload)
                 }
     case "REMOVE_ITEM_FROM_CART":
-            let sessionItems_1 = JSON.parse(sessionStorage.getItem('cart'))
-            let cartTotal = JSON.parse(sessionStorage.getItem('cartTotal'))
+            let sessionItems_1 = sessionStorage.getItem('cart')
+            // let sessionItems_1 = JSON.parse(sessionStorage.getItem('cart'))
+            let cartTotal = sessionStorage.getItem('cartTotal')
+            // let cartTotal = JSON.parse(sessionStorage.getItem('cartTotal'))
                 return{
                     ...state,
-                    cartItems:removeItemFromCart(sessionItems_1 || [],payload,cartTotal)
+                    cartItems:removeItemFromCart(JSON.parse(sessionItems_1) || [],payload,JSON.parse(cartTotal))
                     }          
     case "UPDATE_CART":
             return{
@@ -31,6 +34,7 @@ const Reducer = (state,{type,payload}) =>{
     
     case "CLEAR_CART":
         let sessionItems_2 = JSON.parse(sessionStorage.getItem('cart')) || []
+        // let sessionItems_2 = JSON.parse(sessionStorage.getItem('cart')) || []
             return{
                 ...state,
                 cartItems:sessionItems_2.filter(
