@@ -121,12 +121,12 @@ const removeItemFromCart = (id,title,price) =>{
     sessionStorage.setItem(`${id}`,existingNum - 1)
 }
 
-  const handleClick = item =>{
+  const handleClick = (item,id) =>{
     let cartCount = JSON.parse(sessionStorage.getItem('cart'))
+    sessionStorage.removeItem(`${id}`)
     if(cartCount && cartCount.length == 1){
         sessionStorage.removeItem('cart');
         sessionStorage.setItem('cartTotal',0)
-        sessionStorage.removeItem(`${id}`)
     }else{
         dispatch({type:"CLEAR_CART",payload:item})
     }
@@ -313,7 +313,7 @@ if(!cartItems && !sessionItems) return (<div>loading checkout items</div>)
                                               classes={{ tooltip: classes.tooltip }}
                                             >
                                               <Button link className={classes.actionButton}>
-                                                <Close  onClick={() => handleClick(item)}/>
+                                                <Close  onClick={() => handleClick(item,id)}/>
                                               </Button>
                                             </Tooltip>
                                       ]
@@ -436,7 +436,7 @@ if(!cartItems && !sessionItems) return (<div>loading checkout items</div>)
                                                     classes={{ tooltip: classes.tooltip }}
                                                   >
                                                     <Button link className={classes.actionButton}>
-                                                      <Close  onClick={() => handleClick(item)}/>
+                                                      <Close  onClick={() => handleClick(item,id)}/>
                                                     </Button>
                                                   </Tooltip>
                                             ]
