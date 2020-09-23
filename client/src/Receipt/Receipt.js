@@ -13,9 +13,10 @@ const Receipt = () => {
     let {username,profile,orderCount} = state;
     const cartItems = JSON.parse(sessionStorage.getItem('cart'))
     
-    const [data,setData] = useState(null)
-    const [endpoint,setEndpoint] = useState('http://localhost:5001')
-
+    let sessionItems = JSON.parse(sessionStorage.getItem('cart'))
+    let maskTotal = totalPrice(sessionItems);
+    let trueTotal = parseFloat(maskTotal) + 5.00;
+    
     const getData = item => {
         console.log("get Data ran");
         console.log(item)
@@ -65,7 +66,9 @@ const Receipt = () => {
                             )
                         })
                     }
-                Total: {totalPrice(cartItems)}
+                Shipping: $5
+                Masks: {totalPrice(cartItems)}
+                Total: ${trueTotal}
             </tbody>
             </Table>
             </div>)

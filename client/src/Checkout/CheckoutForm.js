@@ -42,7 +42,6 @@ const CheckoutForm = ({price,history}) => {
   }, []);
   
   const handleSubmit = async (ev) => {
-      console.log(clientSecret)
     ev.preventDefault();
     setProcessing(true);
     removeItemFromInventory(cartTotal)
@@ -50,11 +49,7 @@ const CheckoutForm = ({price,history}) => {
 
     createPaymentIntent(item)
     .then((clientSecret) => {
-        console.log("clientSecret:")
-        console.log(clientSecret.client_secret)
         setClientSecret(clientSecret.client_secret)
-      console.log("clientSecret:")
-      console.log(clientSecret)
     })
     .catch((err) => {
       setError(err.message);

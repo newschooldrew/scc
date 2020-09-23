@@ -24,7 +24,8 @@
     "node-sass": "^4.14.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^3.4.3",
-    "reactstrap": "^8.5.1"
+    "reactstrap": "^8.5.1",
+    "use-error-boundary": "^1.2.4"
   },
   "browserslist": {
     "production": [

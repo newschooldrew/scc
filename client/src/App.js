@@ -38,6 +38,7 @@ const App = ({history}) => {
     const [quantity, setQuantities] = useState({})
     
     let sessionCartItems = JSON.parse(sessionStorage.getItem('cart'))
+    let sessionAllMasks = JSON.parse(sessionStorage.getItem('allMasks'))
     
     const [filterValue, setFilterValue] = useState({people:false,animals:false,flowers:false})
     const [values, setValues] = useState({people:false,animals:false,flowers:false});
@@ -102,15 +103,34 @@ const App = ({history}) => {
 
     useEffect(() =>{
         fetchAllMasks(dispatch)
+        
+        if(sessionAllMasks && sessionAllMasks.length > 1 && sessionAllMasks !== null){
+          console.log("")
+        } else{
+          sessionStorage.setItem('allMasks',JSON.stringify(allMasks))
+        }
     },[])
 
 
     useEffect(() =>{
       fetchAllMasks(dispatch)
+      
+      
+      if(sessionAllMasks && sessionAllMasks.length > 1 && sessionAllMasks !== null){
+        console.log("")
+      } else{
+        sessionStorage.setItem('allMasks',JSON.stringify(allMasks))
+      }
+      
+
       if(cartItems && cartItems.length > 0){
-        try{
-            
+        // try{
+          if(cartItems !== undefined){
             sessionStorage.setItem('cart',JSON.stringify(cartItems))
+        } else{
+          console.log("cartItems:")
+          console.log(cartItems)
+        }
             newTotal = cartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
             sessionStorage.setItem('cartTotal',newTotal)
 
@@ -120,14 +140,7 @@ const App = ({history}) => {
           console.log(cartItems)
 
           newTotal = cartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
-            // if(sessionCartItems == null){
-            // } else{
-            //   newTotal = sessionCartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
-            // }
 
-        } catch(e){
-            console.log("cartItems is empty")
-        }
     }
     },[cartItems,hitCount])
 

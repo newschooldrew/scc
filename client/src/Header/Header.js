@@ -34,12 +34,23 @@ const Header = ({history,match}) => {
                 update(cartItems,{
                     $set:sessionCartItems
                 })
-                sessionStorage.setItem('cart',JSON.stringify(cartItems))
+
+                if(sessionCartItems == null || sessionCartItems == undefined){
+                    sessionStorage.setItem('cart',JSON.stringify(cartItems))
+                }
+
+                if(cartItems !== undefined){
+                    sessionStorage.setItem('cart',JSON.stringify(cartItems))
+                } else{
+                    console.log("cartItems:")
+                    console.log(cartItems)
+                  }
+                  
                 newTotal = cartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
                 sessionStorage.setItem('cartTotal',newTotal)
     
             } catch(e){
-                console.log("cartItems is empty")
+                console.log(e)
             }
         }
     },[])
@@ -48,17 +59,24 @@ const Header = ({history,match}) => {
         if(cartItemCount == null){
             sessionStorage.setItem('cartTotal',0)
         } 
+
+        if(sessionCartItems == null || sessionCartItems == undefined){
+            sessionStorage.setItem('cart',JSON.stringify(cartItems))
+        }
+
         if(sessionCartItems && sessionCartItems.length > 0){
             try{
                 update(cartItemCount,{
                     $set:sessionCartItems.length
                 })
-                sessionStorage.setItem('cart',JSON.stringify(cartItems))
+                if(cartItems !== undefined){
+                    sessionStorage.setItem('cart',JSON.stringify(cartItems))
+                }
                 newTotal = cartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
                 sessionStorage.setItem('cartTotal',newTotal)
     
             } catch(e){
-                console.log("cartItems is empty")
+                console.log(e)
             }
         }
           

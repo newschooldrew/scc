@@ -61,8 +61,9 @@ function ShoppingCartPage({history}) {
     fetchAllMasks(dispatch)
     if(cartItems && cartItems.length > 0){
       try{
-          
+        if(cartItems !== undefined){
           sessionStorage.setItem('cart',JSON.stringify(cartItems))
+      }
           newTotal = cartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
           sessionStorage.setItem('cartTotal',newTotal)
 
@@ -176,7 +177,7 @@ const lineItem = {
 
 const classes = useStyles();
 let sessionItems = JSON.parse(sessionStorage.getItem('cart'))
-let maskTotal = totalPrice(sessionItems||cartItems);
+let maskTotal = totalPrice(sessionItems);
 let trueTotal = parseFloat(maskTotal) + 5.00;
 if(!cartItems && !sessionItems) return (<div>loading checkout items</div>)
 
@@ -210,10 +211,10 @@ if(!cartItems && !sessionItems) return (<div>loading checkout items</div>)
                           <CardBody plain>
                             <Button color="info" onClick={() => goBackToShopping()}>Back to Shopping</Button>
                     {(() => {
-
                     if(sessionItems && sessionItems.length > 0){
                       
                       let cartItemCount = JSON.parse(sessionStorage.getItem('cart'))
+                      let myMasks = JSON.parse(sessionStorage.getItem('allMasks'))
                       let matchCartItemArr = [];
 
                       return(
@@ -222,8 +223,8 @@ if(!cartItems && !sessionItems) return (<div>loading checkout items</div>)
                           console.log("quantity:")
                           console.log(quantity)
 
-                          if(allMasks){
-                          allMasks.map(mask =>{
+                          if(myMasks){
+                            myMasks.map(mask =>{
                             if(mask._id == id){ 
                               matchCartItemArr.push(mask)
                             }
@@ -255,65 +256,65 @@ if(!cartItems && !sessionItems) return (<div>loading checkout items</div>)
                           }
 
                             let tableData = [  
-                              // image
-                                      <div className={classes.imgContainer} key={1}>
-                                      <img src={item.url} alt="..." className={classes.img} />
-                                        </div>,
-                              // PRODUCT
-                                          <span key={1}>
-                                          <a href="#jacket" className={classes.tdNameAnchor}>
-                                            {item.title}
-                                          </a>
-                                          <br />
-                                          <small className={classes.tdNameSmall}>
-                                            {item.description}
-                                          </small>
-                                        </span>,
-                              // PRICE
-                                        <span key={1}>
-                                          <small className={classes.tdNumberSmall}>$</small> {item.price}
-                                        </span>,
-                            // QTY
-                                        <span key={1}>
-                                          {` `}
-                                          <div className={classes.buttonGroup}>
-                                          
-                                            <Button
-                                              color="info"
-                                              size="sm"
-                                              round
-                                              disabled={currentItem[0].quantity == quantity}
-                                              onClick={() => addItemToCart(id,title,price)}
-                                            >
-                                              <i className="now-ui-icons ui-1_simple-add"></i>
-                                            </Button>
-                                            <p style={quantityStyle}>{cartItemCount[idx].quantity}</p>
-                                            <Button
-                                              color="info"
-                                              size="sm"
-                                              round
-                                              onClick={() => removeItemFromCart(id,title,price)}
-                                            >
-                                              <i className="now-ui-icons ui-1_simple-delete"></i>
-                                            </Button>
+                                  // image
+                                          <div className={classes.imgContainer} key={1}>
+                                          <img src={item.url} alt="..." className={classes.img} />
+                                            </div>,
+                                  // PRODUCT
+                                              <span key={1}>
+                                              <a href="#jacket" className={classes.tdNameAnchor}>
+                                                {item.title}
+                                              </a>
+                                              <br />
+                                              <small className={classes.tdNameSmall}>
+                                                {item.description}
+                                              </small>
+                                            </span>,
+                                  // PRICE
+                                            <span key={1}>
+                                              <small className={classes.tdNumberSmall}>$</small> {item.price}
+                                            </span>,
+                                // QTY
+                                            <span key={1}>
+                                              {` `}
+                                              <div className={classes.buttonGroup}>
+                                              
+                                                <Button
+                                                  color="info"
+                                                  size="sm"
+                                                  round
+                                                  disabled={currentItem[0].quantity == quantity}
+                                                  onClick={() => addItemToCart(id,title,price)}
+                                                >
+                                                  <i className="now-ui-icons ui-1_simple-add"></i>
+                                                </Button>
+                                                <p style={quantityStyle}>{cartItemCount[idx].quantity}</p>
+                                                <Button
+                                                  color="info"
+                                                  size="sm"
+                                                  round
+                                                  onClick={() => removeItemFromCart(id,title,price)}
+                                                >
+                                                  <i className="now-ui-icons ui-1_simple-delete"></i>
+                                                </Button>
 
-                                          </div>
-                                        </span>,
-                            // AMOUNT
-                                        <span key={1}>
-                                          <small className={classes.tdNumberSmall}>$</small> {totalItemPrice(item)}
-                                        </span>,
-                                        <Tooltip
-                                          key={1}
-                                          id="close1"
-                                          title="Remove item"
-                                          placement="left"
-                                          classes={{ tooltip: classes.tooltip }}
-                                        >
-                                          <Button link className={classes.actionButton}>
-                                            <Close  onClick={() => handleClick(item)}/>
-                                          </Button>
-                                        </Tooltip>
+                                              </div>
+                                            </span>,
+                                // AMOUNT
+                                            <span key={1}>
+                                              <small className={classes.tdNumberSmall}>$</small> {totalItemPrice(item)}
+                                            </span>,
+                                            <Tooltip
+                                              key={1}
+                                              id="close1"
+                                              title="Remove item"
+                                              placement="left"
+                                              classes={{ tooltip: classes.tooltip }}
+                                            >
+                                              <Button link className={classes.actionButton}>
+                                                <Close  onClick={() => handleClick(item)}/>
+                                              </Button>
+                                            </Tooltip>
                                       ]
 
                                       if(mobileSize){
@@ -324,18 +325,141 @@ if(!cartItems && !sessionItems) return (<div>loading checkout items</div>)
                                         })
                                       }
 
-                        return(
-                                <CheckoutTable
-                                    key={id}
-                                    tableHead={tableHeadData}
-                                    tableData={[tableData]}
-                                        />
-                                            )
-                                          })
+                                    return(
+                                          <CheckoutTable
+                                              key={id}
+                                              tableHead={tableHeadData}
+                                              tableData={[tableData]}
+                                            />
+                                          )
+                                  })
                                           // end of sessionItems map
 
-                                         )
-                                      } 
+                            )
+                          } else if(cartItems && cartItems.length > 1){
+                            let cartItemCount = JSON.parse(sessionStorage.getItem('cart'))
+                            let matchCartItemArr = [];
+      
+                            return(
+                              cartItems.map((item,idx) =>{
+                                const {id,title,price,quantity} = item;
+                                console.log("quantity:")
+                                console.log(quantity)
+      
+                                if(allMasks){
+                                allMasks.map(mask =>{
+                                  if(mask._id == id){ 
+                                    matchCartItemArr.push(mask)
+                                  }
+                                  console.log("matchCartItemArr:")
+                                  console.log(matchCartItemArr)
+                                })
+                              }
+                                let currentItem = matchCartItemArr.filter(item => item._id == id)
+                            
+                                let tableHeadData;
+      
+                                if(!mobileSize){
+                                  tableHeadData = [
+                                    "",
+                                    "PRODUCT",
+                                    "PRICE",
+                                    "QTY",
+                                    "AMOUNT",
+                                    ""
+                                  ]
+                                } else{
+                                  tableHeadData = [
+                                    "",
+                                    "PRICE",
+                                    "QTY",
+                                    "AMOUNT",
+                                    ""
+                                  ]                            
+                                }
+      
+                                  let tableData = [  
+                                        // image
+                                                <div className={classes.imgContainer} key={1}>
+                                                <img src={item.url} alt="..." className={classes.img} />
+                                                  </div>,
+                                        // PRODUCT
+                                                    <span key={1}>
+                                                    <a href="#jacket" className={classes.tdNameAnchor}>
+                                                      {item.title}
+                                                    </a>
+                                                    <br />
+                                                    <small className={classes.tdNameSmall}>
+                                                      {item.description}
+                                                    </small>
+                                                  </span>,
+                                        // PRICE
+                                                  <span key={1}>
+                                                    <small className={classes.tdNumberSmall}>$</small> {item.price}
+                                                  </span>,
+                                      // QTY
+                                                  <span key={1}>
+                                                    {` `}
+                                                    <div className={classes.buttonGroup}>
+                                                    
+                                                      <Button
+                                                        color="info"
+                                                        size="sm"
+                                                        round
+                                                        disabled={currentItem[0].quantity == quantity}
+                                                        onClick={() => addItemToCart(id,title,price)}
+                                                      >
+                                                        <i className="now-ui-icons ui-1_simple-add"></i>
+                                                      </Button>
+                                                      <p style={quantityStyle}>{cartItemCount[idx].quantity}</p>
+                                                      <Button
+                                                        color="info"
+                                                        size="sm"
+                                                        round
+                                                        onClick={() => removeItemFromCart(id,title,price)}
+                                                      >
+                                                        <i className="now-ui-icons ui-1_simple-delete"></i>
+                                                      </Button>
+      
+                                                    </div>
+                                                  </span>,
+                                      // AMOUNT
+                                                  <span key={1}>
+                                                    <small className={classes.tdNumberSmall}>$</small> {totalItemPrice(item)}
+                                                  </span>,
+                                                  <Tooltip
+                                                    key={1}
+                                                    id="close1"
+                                                    title="Remove item"
+                                                    placement="left"
+                                                    classes={{ tooltip: classes.tooltip }}
+                                                  >
+                                                    <Button link className={classes.actionButton}>
+                                                      <Close  onClick={() => handleClick(item)}/>
+                                                    </Button>
+                                                  </Tooltip>
+                                            ]
+      
+                                            if(mobileSize){
+                                              tableData = tableData.filter((data,idx) =>{
+                                                    if(idx !== 1){
+                                                      return data 
+                                                    }
+                                              })
+                                            }
+      
+                                          return(
+                                                <CheckoutTable
+                                                    key={id}
+                                                    tableHead={tableHeadData}
+                                                    tableData={[tableData]}
+                                                  />
+                                                )
+                                        })
+                                                // end of sessionItems map
+      
+                                  )
+                            }
                                       // end of sessionItems length
 
                                       else {return <p style={noItemsMargin}>No items left in this cart</p>}

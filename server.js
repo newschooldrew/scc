@@ -200,12 +200,12 @@ newCheckout.email = email;
 newCheckout.confirmation = confirmationCode;
 
 newCheckout.save()
-    // .then(order =>{
-    //     return order.sendSmsNotification(
-    //       `${actualName} ${lastName} bought a mask!
-    //         Address is ${address},${city},${province} ${postal_code}
-    //       `, ()=>console.log("something went wrong"))
-    // })
+    .then(order =>{
+        return order.sendSmsNotification(
+          `${actualName} ${lastName} bought a mask!
+            Address is ${address},${city},${province} ${postal_code}
+          `, ()=>console.log("something went wrong"))
+    })
 
 const totalPrice = items =>{
   console.log("total Price items")
