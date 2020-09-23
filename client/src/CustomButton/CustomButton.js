@@ -5,7 +5,7 @@ const CustomButton = ({type,id,title,price,url,qty}) => {
     const {state,dispatch} = useContext(AuthContext)
     const {allMasks,cartItems} = state;
 
-    let sessionCartItems = JSON.parse(sessionStorage.getItem('cart'))
+    let sessionCartItems = sessionStorage.getItem('cart')
 
     let hitButton = useRef(0)
 
