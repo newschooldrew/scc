@@ -126,6 +126,7 @@ const removeItemFromCart = (id,title,price) =>{
     if(cartCount && cartCount.length == 1){
         sessionStorage.removeItem('cart');
         sessionStorage.setItem('cartTotal',0)
+        sessionStorage.removeItem(`${id}`)
     }else{
         dispatch({type:"CLEAR_CART",payload:item})
     }
