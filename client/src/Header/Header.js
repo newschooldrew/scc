@@ -16,10 +16,9 @@ const Header = ({history,match}) => {
     const {state,dispatch} = useContext(AuthContext)
     const {cartItems,toggleCart,hitCount} = state;
     // const { addToast } = useToasts()
-    let cartAlerts = JSON.parse(sessionStorage.getItem('orderNotification'))
     let cartItemCount = sessionStorage.getItem('cartTotal')
     let orderCountItems = sessionStorage.getItem('orderCount')
-    let sessionCartItems = JSON.parse(sessionStorage.getItem('cart'))
+    let sessionCartItems = sessionStorage.getItem('cart')
     let newTotal;
     const [toggleStickyUnit,setToggleStickyUnit] = useState(false)
 
@@ -45,7 +44,7 @@ const Header = ({history,match}) => {
                     console.log("cartItems:")
                     console.log(cartItems)
                   }
-                  
+
                 newTotal = cartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
                 sessionStorage.setItem('cartTotal',newTotal)
     
@@ -66,9 +65,6 @@ const Header = ({history,match}) => {
 
         if(sessionCartItems && sessionCartItems.length > 0){
             try{
-                update(cartItemCount,{
-                    $set:sessionCartItems.length
-                })
                 if(cartItems !== undefined){
                     sessionStorage.setItem('cart',JSON.stringify(cartItems))
                 }
@@ -298,7 +294,7 @@ let fontStyle = {
                                     <ShoppingCartIcon style={buttonStyle} />
                                     </Button>
                                         <div className={classes.pContainer}><p style={fontStyle}>Cart Items: {cartItemCount}</p></div></>)}
-                                    {toggleCart ? (<CartDropdown cartItems={sessionCartItems} />):null}
+                                    {toggleCart ? (<CartDropdown cartItems={JSON.parse(sessionCartItems)} />):null}
                                 </div>)
                         :null}
                 </div>  
