@@ -22,7 +22,8 @@ export const removeItemFromCart = (cartItems,cartItemToRemove,cartTotal) => {
         console.log("cartTotal:")
         console.log(cartTotal)
         // find out if there is an item in the count
-        JSON.parse(cartItems)
+        console.log("cartItems from removeItem fn")
+        console.log(cartItems)
         const existingCartItem = cartItems.find(
             cartItem => cartItem.id === cartItemToRemove.id
             )
@@ -32,7 +33,7 @@ export const removeItemFromCart = (cartItems,cartItemToRemove,cartTotal) => {
                     return cartItems.filter(cartItem => cartItem.id !== cartItemToRemove.id)
                     }
                         // bring in cartItem
-                     return cartItems.map(cartItem => 
+                     return  cartItems.map(cartItem => 
                             cartItem.id == cartItemToRemove.id
                             ? {...cartItem,quantity: cartItem.quantity - 1}
                             : cartItem

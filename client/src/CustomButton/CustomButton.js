@@ -5,7 +5,7 @@ const CustomButton = ({type,id,title,price,url,qty}) => {
     const {state,dispatch} = useContext(AuthContext)
     const {allMasks,cartItems} = state;
 
-    let sessionCartItems = sessionStorage.getItem('cart')
+    let sessionCartItems = JSON.parse(sessionStorage.getItem('cart'))
 
     let hitButton = useRef(0)
 
@@ -14,6 +14,7 @@ const CustomButton = ({type,id,title,price,url,qty}) => {
         const item = {id,title,price,url};
         dispatch({type:"ADD_ITEM_TO_CART",payload:item})
         dispatch({type:"HIT_COUNT",payload:hitButton.current +=1})
+        let foundItem;
     
         let existingNum;
           if(sessionStorage.getItem(id)){

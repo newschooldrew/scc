@@ -37,6 +37,7 @@ const App = ({history}) => {
     const [emailFocus, setEmailFocus] = React.useState(false);
     const [quantity, setQuantities] = useState({})
     
+    let sessionCartItems = JSON.parse(sessionStorage.getItem('cart'))
     let sessionAllMasks = JSON.parse(sessionStorage.getItem('allMasks'))
     
     const [filterValue, setFilterValue] = useState({people:false,animals:false,flowers:false})
@@ -124,15 +125,18 @@ const App = ({history}) => {
 
       if(cartItems && cartItems.length > 0){
         // try{
-          if(cartItems !== undefined){
+          if(cartItems !== undefined || cartItems !== null ){
             sessionStorage.setItem('cart',JSON.stringify(cartItems))
         } else{
-          console.log("cartItems:")
-          console.log(cartItems)
-        }
+            sessionStorage.setItem('cart',[])
+          }
+
+        
             newTotal = cartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
             sessionStorage.setItem('cartTotal',newTotal)
 
+          console.log("sessionCartItems")
+          console.log(sessionCartItems)
           console.log("cartItems")
           console.log(cartItems)
 
@@ -267,6 +271,7 @@ const App = ({history}) => {
                 const price = post.price;
                 const url = post.url;
                 const quantity = post.quantity;
+                let sessionCartItems = JSON.parse(sessionStorage.getItem('cart'))
                 let qty;
                 let limit;
                 let disabled;
