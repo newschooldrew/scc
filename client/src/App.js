@@ -101,6 +101,9 @@ const App = ({history}) => {
         soldOut:{
           color:'red',
           fontWeight:'bold'
+        },
+        section:{
+          marginBottom:'5%'
         }
       }));
     
@@ -182,7 +185,7 @@ const App = ({history}) => {
         <>
       <div className={"wrapper",classes.scroll}>
         <div className={"main"}>
-          <div className="section">
+          <div className={"section",classes.section}>
             <Container>
               {!mobileSize ? (<Button color="info" type="button"><Link to="/checkout">Go To Checkout</Link></Button>) : null}
               <Row>
