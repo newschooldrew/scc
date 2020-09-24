@@ -188,13 +188,13 @@ const App = ({history}) => {
               <Row>
                 {mobileSize || tabletSize ? (
                 <div className={classes.fullWidth}>
-                  <Button color={filterValue["animals"] == true ? "success" : "info"} type="button" className={classes.buttonCenter} value="animals" onClick={e => handleMobileChange(e)}>
+                  <Button color={filterValue["animals"] == true ? "success" : "info"} type="button" className={classes.buttonCenter} value="animals" onTouchEnd={e => handleMobileChange(e)} onClick={e => handleMobileChange(e)}>
                       Animals
                   </Button>
-                  <Button color={filterValue["flowers"] == true ? "success" : "info"} type="button" className={classes.buttonCenter} value="flowers" onClick={e => handleMobileChange(e)}>
+                  <Button color={filterValue["flowers"] == true ? "success" : "info"} type="button" className={classes.buttonCenter} value="flowers" onTouchEnd={e => handleMobileChange(e)} onClick={e => handleMobileChange(e)}>
                       Flowers
                   </Button>
-                  <Button color={filterValue["people"] == true ? "success" : "info"} type="button" className={classes.buttonCenter} value="people" onClick={e => handleMobileChange(e)}>
+                  <Button color={filterValue["people"] == true ? "success" : "info"} type="button" className={classes.buttonCenter} value="people" onTouchEnd={e => handleMobileChange(e)} onClick={e => handleMobileChange(e)}>
                       People
                   </Button>
                 </div>

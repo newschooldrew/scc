@@ -10,7 +10,7 @@
   },
   "scripts": {
     "start": "nodemon server",
-    "server": "node server",
+    "server": "nodemon server",
     "client": "cd client && yarn run start",
     "dev": "concurrently \"yarn run server\" \"yarn run client\"",
     "heroku-postbuild": "YARN_PRODUCTION=true cd client && yarn && yarn run build"
@@ -33,6 +33,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.3",
+    "sendgrid": "^5.2.3",
     "stripe": "^8.95.0",
     "twilio": "^3.49.2"
   }

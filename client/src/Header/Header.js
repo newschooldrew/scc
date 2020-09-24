@@ -86,6 +86,15 @@ const handleCartClick = () =>{
     dispatch({type:"TOGGLE_CART",payload:toggleCart})
 }
 
+const handleHeaderClick = () => {
+    if(history.location.pathname == '/receipt') {
+        dispatch({type:"EMPTY_CART"})
+        history.push('/')
+    } else{
+        history.push('/')
+    }
+}
+
 const handleCheckoutClick = () =>{
     history.push('/checkout')
     console.log(match.params)
@@ -197,7 +206,7 @@ let fontStyle = {
         },
         appbarHeight:{
             marginTop:'80vh',
-            height:'100px',
+            height:'175px',
             display: 'flex',
             flexDirection: 'column'
         },
@@ -221,11 +230,6 @@ let fontStyle = {
             flexDirection: 'row',
             justifyContent:'center',
             alignItems:'center'
-        },
-        mobileMenuButton:{
-            marginTop:'87vh',
-            height:'50px',
-            textAlgin:'center'
         },
         bigFont:{
             fontSize:'26px',
@@ -281,7 +285,7 @@ let fontStyle = {
                     <div style={iconStyle}>
                         <div style={outerIconStyle}></div>
                         <div style={innerIconStyle}>
-                            <a  onClick={() => history.push('/')} style={clickable}><img src="https://res.cloudinary.com/dzdvrgbjd/image/upload/v1599961709/CAAEYC_SouthernCalifornia_satellite_wide_tcqkpt.png" /></a>
+                            <a  onClick={handleHeaderClick} style={clickable}><img src="https://res.cloudinary.com/dzdvrgbjd/image/upload/v1599961709/CAAEYC_SouthernCalifornia_satellite_wide_tcqkpt.png" /></a>
                         </div>
                         <div style={outerIconStyle}></div>
                     </div>

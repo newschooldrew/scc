@@ -183,12 +183,12 @@ newCheckout.email = email;
 newCheckout.confirmation = confirmationCode;
 
 newCheckout.save()
-    .then(order =>{
-        return order.sendSmsNotification(
-          `${actualName} ${lastName} bought a mask!
-            Address is ${address},${city},${province} ${postal_code}
-          `, ()=>console.log("something went wrong"))
-    })
+    // .then(order =>{
+    //     return order.sendSmsNotification(
+    //       `${actualName} ${lastName} bought a mask!
+    //         Address is ${address},${city},${province} ${postal_code}
+    //       `, ()=>console.log("something went wrong"))
+    // })
 
 const totalPrice = items =>{
   console.log("total Price items")
@@ -197,11 +197,9 @@ const totalPrice = items =>{
   return price.toFixed(2);
 }
 
-console.log("email:")
-console.log(email)
   const msg = {
-      // to: ['drewwperez@gmail.com',email],
-      to: email,
+      to: ['drewwperez@gmail.com',email],
+      // to: 'drewwperez@gmail.com',
       from: 'drewwperez@gmail.com', // Use the email address or domain you verified above
       subject: 'Thank you for your order!',
       html:`<html>
@@ -251,12 +249,16 @@ console.log(email)
       )
     })
 
-      try {
+    // sgMail.send(msg).then(()=>{
+    //   console.log("emails sent successfully")
+    // }).catch(err =>{
+    //   console.log(err)
+    // })
+    try {
         // send multiple individual emails to multiple recipients 
         // where they don't see each other's email addresses
-        // console.log("sending mail")
-        await sgMail.send(msg);
-        // await sgMail.sendMultiple(msg);
+        console.log("sending mail")
+        await sgMail.sendMultiple(msg);
       } catch (error) {
         console.error(error);
     
@@ -265,7 +267,6 @@ console.log(email)
           console.error(error.response.body)
         }
       }
-
   })
 
 if(process.env.NODE_ENV == 'production'){
