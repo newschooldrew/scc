@@ -130,10 +130,19 @@ const iconStyle = {
     margin:'auto',
     display:'flex'
 }
+
+const mobIconStyle = {
+    width:'85%',
+    height:'105px',
+    margin:'auto',
+    display:'flex'
+}
+
 const innerIconStyle = {
     width:'75%',
     justifyContent:'spaceBetween'
 }
+
 const outerIconStyle = {
     width:'13%',
     justifyContent:'spaceBetween',
@@ -282,7 +291,7 @@ let fontStyle = {
          : null}
                 
                 <div style={mobileSize ? mobHeaderStyle : tabletSize ? tabletHeaderStyle :headerStyle}>
-                    <div style={iconStyle}>
+                    <div style={mobileSize ? mobIconStyle : iconStyle}>
                         <div style={outerIconStyle}></div>
                         <div style={innerIconStyle}>
                             <a  onClick={handleHeaderClick} style={clickable}><img src="https://res.cloudinary.com/dzdvrgbjd/image/upload/v1599961709/CAAEYC_SouthernCalifornia_satellite_wide_tcqkpt.png" /></a>

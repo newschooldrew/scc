@@ -103,7 +103,10 @@ const App = ({history}) => {
           fontWeight:'bold'
         },
         section:{
-          marginBottom:'5%'
+          margin:'10% 0 15% 0'
+        },
+        quantityStyle:{
+          margin:'0 0 15% 0'
         }
       }));
     
@@ -191,13 +194,13 @@ const App = ({history}) => {
               <Row>
                 {mobileSize || tabletSize ? (
                 <div className={classes.fullWidth}>
-                  <Button color={filterValue["animals"] == true ? "success" : "info"} type="button" className={classes.buttonCenter} value="animals" onTouchEnd={e => handleMobileChange(e)} onClick={e => handleMobileChange(e)}>
+                  <Button color={filterValue["animals"] == true ? "success" : "info"} type="button" className={classes.buttonCenter} value="animals"  onClick={e => handleMobileChange(e)}>
                       Animals
                   </Button>
-                  <Button color={filterValue["flowers"] == true ? "success" : "info"} type="button" className={classes.buttonCenter} value="flowers" onTouchEnd={e => handleMobileChange(e)} onClick={e => handleMobileChange(e)}>
+                  <Button color={filterValue["flowers"] == true ? "success" : "info"} type="button" className={classes.buttonCenter} value="flowers"  onClick={e => handleMobileChange(e)}>
                       Flowers
                   </Button>
-                  <Button color={filterValue["people"] == true ? "success" : "info"} type="button" className={classes.buttonCenter} value="people" onTouchEnd={e => handleMobileChange(e)} onClick={e => handleMobileChange(e)}>
+                  <Button color={filterValue["people"] == true ? "success" : "info"} type="button" className={classes.buttonCenter} value="people"  onClick={e => handleMobileChange(e)}>
                       People
                   </Button>
                 </div>
@@ -326,12 +329,11 @@ const App = ({history}) => {
                                         <HitCount type="positive" />
                                       </Button> */}
                                           <CustomButton type="positive" id={id} title={title} price={price} url={url} qty={quantity}/>
-                                      <p>{post.limitReached}</p>
                                 </CardTitle>
                         </CardBody>
                             <CardFooter>
                                 <CardText className={classes.paper}>Quantity: </CardText>
-                                <CardText className={classes.paper}>{post.quantity == 0 ? (<p className={classes.soldOut}>SOLD OUT</p>): (<div>{post.quantity}</div>)}</CardText>
+                                <CardText className={classes.paper}>{post.quantity == 0 ? (<p className={classes.soldOut}>SOLD OUT</p>): (<div className={classes.quantityStyle}>{post.quantity}</div>)}</CardText>
                             </CardFooter>
                         </Card>
                     </Col>
