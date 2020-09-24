@@ -44,7 +44,6 @@ const CheckoutForm = ({price,history}) => {
   const handleSubmit = async (ev) => {
     ev.preventDefault();
     setProcessing(true);
-    removeItemFromInventory(cartTotal)
     const item = {actualName,lastName,address,city,province,postal_code,email,price,cartTotal}
 
     createPaymentIntent(item)
@@ -78,6 +77,7 @@ const CheckoutForm = ({price,history}) => {
       setProcessing(false);
       setMetadata(payload.paymentIntent);
       console.log("[PaymentIntent]", payload.paymentIntent)
+      
     }
     createOrder(item)
     history.push('/receipt')

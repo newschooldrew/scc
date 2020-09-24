@@ -107,24 +107,6 @@ app.post("/change-limit-reached", async (req, res) => {
   )
 })
 
-//////////// remove item from inventory /////////////
-
-app.post("/remove-item-from-inventory", async (req, res) => {
-  const {id,cartTotal} = req.body;
-  // JSON.parse(cartTotal)
-    console.log("req.body:");
-    console.log(req.body);
-    console.log(typeof cartTotal)
-
-    cartTotal.map(async item =>{
-      const foundMask = await Mask.findByIdAndUpdate(
-          {_id:id},
-          {$inc:{quantity: -item.quantity}},
-          {new:true}
-      )
-    })
-})
-
 //////////// payment /////////////
 
 app.post('/payment', (req, res) => {
@@ -174,6 +156,7 @@ console.log(cartTotal)
 
 app.post('/create-order',async (req,res)=>{
   const {username,actualName,lastName,address,city,province,postal_code,cartTotal,email,price,currency} = req.body;
+  
   JSON.stringify(cartTotal)
 
   const makeid = length => {
@@ -217,7 +200,8 @@ const totalPrice = items =>{
 console.log("email:")
 console.log(email)
   const msg = {
-      to: ['drewwperez@gmail.com',email],
+      // to: ['drewwperez@gmail.com',email],
+      to: email,
       from: 'drewwperez@gmail.com', // Use the email address or domain you verified above
       subject: 'Thank you for your order!',
       html:`<html>
@@ -258,13 +242,21 @@ console.log(email)
       </body>
   </html>`
     };
+    
+    cartTotal.map(async item =>{
+      const foundMask = await Mask.findByIdAndUpdate(
+          {_id:item.id},
+          {$inc:{quantity: -item.quantity}},
+          {new:true}
+      )
+    })
 
       try {
         // send multiple individual emails to multiple recipients 
         // where they don't see each other's email addresses
-        console.log("pretending to send mail")
-        // await sgMail.send(msg);
-        await sgMail.sendMultiple(msg);
+        console.log("sending mail")
+        await sgMail.send(msg);
+        // await sgMail.sendMultiple(msg);
       } catch (error) {
         console.error(error);
     
@@ -272,7 +264,8 @@ console.log(email)
           console.error("error.response.body:")
           console.error(error.response.body)
         }
-      } 
+      }
+
   })
 
 if(process.env.NODE_ENV == 'production'){

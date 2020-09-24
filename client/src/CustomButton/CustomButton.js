@@ -71,7 +71,7 @@ const CustomButton = ({type,id,title,price,url,qty}) => {
             <>
                 <button 
                     onClick={e => addItemToCart(id,title,price,url)}
-                    disabled={limitReached}
+                    disabled={limitReached || qty == 0}
                 >
                     +
                 </button>
@@ -80,7 +80,7 @@ const CustomButton = ({type,id,title,price,url,qty}) => {
             <>
                 <button
                     onClick={() => removeItemFromCart(id,title,price,url)}
-                    disabled={!disabled}
+                    disabled={!disabled || qty == 0}
                 >
                     -
                 </button>
