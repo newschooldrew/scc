@@ -97,6 +97,10 @@ const App = ({history}) => {
         },
         buttonMargin:{
           marginRight:'10px'
+        },
+        soldOut:{
+          color:'red',
+          fontWeight:'bold'
         }
       }));
     
@@ -324,7 +328,7 @@ const App = ({history}) => {
                         </CardBody>
                             <CardFooter>
                                 <CardText className={classes.paper}>Quantity: </CardText>
-                                <CardText className={classes.paper}>{post.quantity}</CardText>
+                                <CardText className={classes.paper}>{post.quantity == 0 ? (<p className={classes.soldOut}>SOLD OUT</p>): (<div>{post.quantity}</div>)}</CardText>
                             </CardFooter>
                         </Card>
                     </Col>

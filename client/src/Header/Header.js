@@ -256,6 +256,12 @@ let fontStyle = {
          {mobileSize && toggleStickyUnit !== true ? 
          (<>
             <AppBar className={classes.appbarHeight} position="fixed" color="info" type="button">
+            <Button onClick={handleCheckoutClick} className={classes.bigFont}>
+                    <p>
+                        Go To Checkout
+                    </p>
+                
+                </Button>
                 <div className={classes.appbarHeightDiv}>
                     <div className={classes.appbarInnerDiv}>
                         {history.location.pathname == '/receipt' ? null :(<ShoppingCartIcon style={mobButtonStyle} />)}
@@ -266,12 +272,7 @@ let fontStyle = {
                         </p>
                     </div>
                 </div>
-                <Button onClick={handleCheckoutClick} className={classes.bigFont}>
-                    <p>
-                        Go To Checkout
-                    </p>
-                
-                </Button>
+
             </AppBar>
             </>) 
          : null}
