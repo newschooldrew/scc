@@ -89,7 +89,8 @@ const App = ({history}) => {
           textAlign:'center'
         },
         buttonCenter:{
-          margin:'5px'
+          margin:'5px',
+          cursor:'pointer'
         },
         fullWidth:{
           margin:'auto'

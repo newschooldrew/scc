@@ -254,7 +254,7 @@ console.log(email)
       try {
         // send multiple individual emails to multiple recipients 
         // where they don't see each other's email addresses
-        console.log("sending mail")
+        // console.log("sending mail")
         await sgMail.send(msg);
         // await sgMail.sendMultiple(msg);
       } catch (error) {
