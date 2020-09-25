@@ -53,7 +53,17 @@ const Reducer = (state,{type,payload}) =>{
         return{
                 ...state,
                 cartItems:[]
-            }   
+            }  
+    case "CREATE_ORDER":
+        return{
+                ...state,
+                order:payload
+            }  
+    case "CREATE_CONFIRMATION":
+        return{
+                ...state,
+                confirmation:payload
+            }  
     }
 }
 export default Reducer;

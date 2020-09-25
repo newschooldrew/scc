@@ -100,13 +100,31 @@ const App = ({history}) => {
         },
         soldOut:{
           color:'red',
-          fontWeight:'bold'
+          fontWeight:'bold',
+          margin:'0 0 15% 0'
         },
         section:{
           margin:'10% 0 15% 0'
         },
         quantityStyle:{
           margin:'0 0 15% 0'
+        },
+        header:{
+          width:'100%',
+          textAlign:'center',
+          fontWeight:'bold',
+          fontSize:'1.05em',
+          display:'flex',
+          flexDirection:'row'
+        },
+        innerHeader:{
+          width:'30%',
+        },
+        mobileInnerHeader:{
+          width:'17%',
+        },
+        outerHeader:{
+          width:'65%',
         }
       }));
     
@@ -188,10 +206,16 @@ const App = ({history}) => {
         <>
       <div className={"wrapper",classes.scroll}>
         <div className={"main"}>
-          <div className={"section",classes.section}>
+          <div className={"section"}>
             <Container>
-              {!mobileSize ? (<Button color="info" type="button"><Link to="/checkout">Go To Checkout</Link></Button>) : null}
               <Row>
+              {tabletSize || mobileSize ? 
+                (<div className={classes.header}>
+                  <div className={classes.mobileInnerHeader}></div>
+                  <div className={classes.outerHeader}>
+                    <p>Filter Mask by Type</p>
+                  </div>
+                </div>) : null}
                 {mobileSize || tabletSize ? (
                 <div className={classes.fullWidth}>
                   <Button color={filterValue["animals"] == true ? "success" : "info"} type="button" className={classes.buttonCenter} value="animals"  onClick={e => handleMobileChange(e)}>
@@ -206,12 +230,12 @@ const App = ({history}) => {
                 </div>
                 ):(
                   <Col md="3">
-                  <h2 className="section-title">SCC Masks!</h2>
+                  {!mobileSize ? (<Button color="info" type="button"><Link to="/checkout">Go To Checkout</Link></Button>) : null}
                   <div className="collapse-panel">
                     <CardBody>
                       <Card className="card-refine card-plain">
                       <CardTitle tag="h4">
-                          Filter Your Masks{" "}
+                          Filter Mask by Type{" "}
                           <Button
                             className="btn-icon btn-neutral pull-right"
                             color="default"

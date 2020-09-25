@@ -82,9 +82,11 @@ export const getPublicStripeKey = options => {
       return res.data;
   };
   
-  export const createOrder = async item =>{
+  export const createOrder = async (item,dispatch) =>{
     console.log("item:")
     console.log(item)
     const res = await axios.post('/create-order', item);
-        console.log("new order created")        
+    console.log("res.data")
+    console.log(res.data)
+    dispatch({type:"CREATE_CONFIRMATION",payload:res.data})     
 }

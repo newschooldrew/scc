@@ -45,7 +45,7 @@ const CheckoutForm = ({price,history}) => {
     ev.preventDefault();
     setProcessing(true);
     const item = {actualName,lastName,address,city,province,postal_code,email,price,cartTotal}
-
+    dispatch({type:"CREATE_ORDER",payload:item})
     createPaymentIntent(item)
     .then((clientSecret) => {
         setClientSecret(clientSecret.client_secret)
@@ -79,7 +79,7 @@ const CheckoutForm = ({price,history}) => {
       console.log("[PaymentIntent]", payload.paymentIntent)
       
     }
-    createOrder(item)
+    createOrder(item,dispatch)
     history.push('/receipt')
   };
 

@@ -133,7 +133,6 @@ const iconStyle = {
 
 const mobIconStyle = {
     width:'85%',
-    height:'105px',
     margin:'auto',
     display:'flex'
 }

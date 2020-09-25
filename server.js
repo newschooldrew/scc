@@ -198,43 +198,68 @@ const totalPrice = items =>{
 }
 
   const msg = {
-      to: ['drewwperez@gmail.com',email],
-      // to: 'drewwperez@gmail.com',
+      // to: ['drewwperez@gmail.com',email],
+      to: 'drewwperez@gmail.com',
       from: 'drewwperez@gmail.com', // Use the email address or domain you verified above
       subject: 'Thank you for your order!',
       html:`<html>
       <body>
           <div style="width: 100%;">
-              <div style="width: 80%;">
-                  <p style="text-align: center;">Thank you for your order!
+                  <p style="font-size:2em;font-weight:bold; text-align:center;">Thank you for your order!</p>
+                  <p style="text-align: center;">
                       We have processed your order and will ship it to you shortly.
                       You will receive another email from us with tracking information when your mask(s) are shipped.
+                      In the meantime if you have any questions or concerns regarding your purchase, please contact
+                      Liliana Alvarez at
                   </p>
-                  <div style="background-color: teal;">
-                      <span style="width: 100%;">
-                          Order Number: ${confirmationCode}<br>
-                          Date: 8/21/2020<br>
-                      </span>
-                      <span style="width: 100%;">
-                          Shipping To:<br>
-                              ${actualName} ${lastName}<br>
-                              ${address}<br>
-                              ${city}, ${province} ${postal_code}
-                      </span>
+                  <div style="background-color: tan; display:flex; flex-direction:row;">
+                  <div style="width: 25%; justify-content:space-between;"></div>
+                      <div style="width: 20%; display:flex;flex-direction:column; justify-content:space-between;">
+                          Date: 8/21/2020<br/>
+                          Order Number: ${confirmationCode}<br/>
+                      </div>
+                      <div style="width: 40%; display:flex; flex-direction:column; justify-content:space-between;margin:0 0 0 4%">
+                          Shipping To:<br/>
+                          ${actualName} ${lastName}<br/>
+                          ${address}<br/>
+                          ${city}, ${province} ${postal_code}<br/>
+                      </div>
+                    <div style="width: 15%; justify-content:space-between;"></div>
                   </div>
-              </div>
-              <div style="width: 80%;">
-                  <table>
+
+              <div style="width: 100%; display:flex; justify-content:space-between;">
+                <div style="width: 15%;"></div>
+                  <div style="width: 50%;">
+                    <table>
                       <tr>
-                          <th>Item</th>
-                          <th>Price</th>
-                          <th>Quantity</th>
+                          <th style="padding: 25px;">Item</th>
+                          <th style="padding: 25px;">Price</th>
+                          <th style="padding: 25px;">Quantity</th>
+                          <th style="padding: 25px;">Image</th>
+                          <th></th>
                       </tr>
                       ${cartTotal.map(item =>{
-                              return `<tr><td>${item.title}</td><td>${item.price}</td><td>${item.quantity}</td><br/><br/></tr>`
+                              return `<tr>
+                                        <td style="text-align:center">${item.title}</td>
+                                        <td style="text-align:center">${item.price}</td>
+                                        <td style="text-align:center">${item.quantity}</td>
+                                        <td><img style="height:75px;width:75px;" src="${item.url}" /></td><br/><br/>
+                                      </tr>
+                                      <tr>
+                                        <td style="text-align:center">Shipping</td>
+                                        <td style="text-align:center">$5</td>
+                                      </tr>
+                                      `
                           }).join('')}
-                          <tr>Total:${totalPrice(cartTotal)}</tr>
-                  </table>
+                          <tr>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td>Total:${parseFloat(totalPrice(cartTotal)) + 5}</td>
+                          </tr>
+                      </table>
+                  </div>
+                <div style="width: 35%;"></div>
               </div>
           </div>
       </body>
@@ -249,16 +274,12 @@ const totalPrice = items =>{
       )
     })
 
-    // sgMail.send(msg).then(()=>{
-    //   console.log("emails sent successfully")
-    // }).catch(err =>{
-    //   console.log(err)
-    // })
     try {
         // send multiple individual emails to multiple recipients 
         // where they don't see each other's email addresses
         console.log("sending mail")
-        await sgMail.sendMultiple(msg);
+        // await sgMail.sendMultiple(msg);
+        await sgMail.send(msg);
       } catch (error) {
         console.error(error);
     
@@ -267,6 +288,8 @@ const totalPrice = items =>{
           console.error(error.response.body)
         }
       }
+
+      res.send(confirmationCode)
   })
 
 if(process.env.NODE_ENV == 'production'){

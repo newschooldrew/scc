@@ -13,6 +13,7 @@ const CheckoutSchema = new Schema({
     state:String,
     zipCode:String,
     email:String,
+    confirmation:String,
     createdDate:{
         type:Date,
         default:Date.now
