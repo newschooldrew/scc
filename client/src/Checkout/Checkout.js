@@ -103,6 +103,7 @@ function ShoppingCartPage({history}) {
 
 const goBackToShopping = () =>{
   history.push('/')
+  dispatch({type:"HIDE_STICKY_UNIT",payload:false})
 }
 
 const removeItemFromCart = (id,title,price) =>{

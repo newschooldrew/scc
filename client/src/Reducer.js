@@ -64,6 +64,11 @@ const Reducer = (state,{type,payload}) =>{
                 ...state,
                 confirmation:payload
             }  
+    case "HIDE_STICKY_UNIT":
+        return{
+                ...state,
+                hideStickyUnit:payload
+            }  
     }
 }
 export default Reducer;

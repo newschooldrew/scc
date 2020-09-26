@@ -14,14 +14,13 @@ import {Link} from 'react-router-dom'
 
 const Header = ({history,match}) => {
     const {state,dispatch} = useContext(AuthContext)
-    const {cartItems,toggleCart,hitCount} = state;
+    const {cartItems,toggleCart,hitCount,hideStickyUnit} = state;
     // const { addToast } = useToasts()
     let cartAlerts = JSON.parse(sessionStorage.getItem('orderNotification'))
     let cartItemCount = sessionStorage.getItem('cartTotal')
     let orderCountItems = sessionStorage.getItem('orderCount')
     let sessionCartItems = JSON.parse(sessionStorage.getItem('cart'))
     let newTotal;
-    const [toggleStickyUnit,setToggleStickyUnit] = useState(false)
 
     useEffect(() =>{
 
@@ -99,7 +98,7 @@ const handleCheckoutClick = () =>{
     history.push('/checkout')
     console.log(match.params)
     if(history.location.pathname){
-        setToggleStickyUnit(true)
+        dispatch({type:"HIDE_STICKY_UNIT",payload:true})
     }
 }
 
@@ -265,7 +264,7 @@ let fontStyle = {
     return (
         <div className={classes.root}>
          <AppBar color="teal" position="fixed">
-         {mobileSize && toggleStickyUnit !== true ? 
+         {mobileSize && hideStickyUnit !== true ? 
          (<>
             <AppBar className={classes.appbarHeight} position="fixed" color="info" type="button">
             <Button onClick={handleCheckoutClick} className={classes.bigFont}>
