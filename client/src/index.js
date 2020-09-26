@@ -7,7 +7,6 @@ import {BrowserRouter,Route,Redirect} from 'react-router-dom';
 import Header from './Header/Header'
 import Checkout from './Checkout/Checkout'
 import Receipt from './Receipt/Receipt'
-import ErrorBoundary from './ErrorBoundary/ErrorBoundary'
 import "./assets/css/bootstrap.min.css";
 import "./assets/scss/now-ui-kit.scss";
 import "./assets/scss/now-ui-dashboard.scss?v=1.4.0";

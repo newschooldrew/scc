@@ -230,8 +230,6 @@ if(!cartItems && !sessionItems) return (<div>loading checkout items</div>)
                             if(mask._id == id){ 
                               matchCartItemArr.push(mask)
                             }
-                            console.log("matchCartItemArr:")
-                            console.log(matchCartItemArr)
                           })
                         }
                           let currentItem = matchCartItemArr.filter(item => item._id == id)

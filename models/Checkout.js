@@ -28,7 +28,7 @@ CheckoutSchema.methods.sendSmsNotification = function(message, statusCallback) {
   const client = twilio(process.env.ACCOUNT_SID, process.env.AUTH_TOKEN);
   const self = this;
   const options = {
-    to: 19514402550,
+    to: 13104286197,
     from: process.env.MY_PHONE_NUMBER,
     body: message,
     statusCallback: statusCallback,

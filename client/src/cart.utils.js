@@ -19,8 +19,6 @@ export const addItemToCart = (cartItems, cartItemToAdd) =>{
     }
 
 export const removeItemFromCart = (cartItems,cartItemToRemove,cartTotal) => {
-        console.log("cartTotal:")
-        console.log(cartTotal)
         // find out if there is an item in the count
         console.log("cartItems from removeItem fn")
         console.log(cartItems)

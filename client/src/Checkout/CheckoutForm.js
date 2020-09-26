@@ -1,18 +1,17 @@
 import React, {useContext, useEffect, useState } from "react";
 import AuthContext from '../AuthContext'
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
-import {createPaymentIntent,createOrder,removeItemFromInventory} from '../actions'
+import {createPaymentIntent,createOrder} from '../actions'
 import {withRouter} from 'react-router-dom'
-import { Col, Row, Button, Form, FormGroup, Label, Input } from 'reactstrap';
+import { Form, FormGroup, Label, Input } from 'reactstrap';
 import './CheckoutForm.scss'
 
 const CheckoutForm = ({price,history}) => {
   const {state,dispatch} = useContext(AuthContext)
-  const {cartItems} = state;
+
   const [clientSecret, setClientSecret] = useState(null);
   const [error, setError] = useState(null);
   const [metadata, setMetadata] = useState(null);
-  const [succeeded, setSucceeded] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [actualName,setActualName] = useState('')
   const [lastName,setLastName] = useState('')
@@ -39,7 +38,7 @@ const CheckoutForm = ({price,history}) => {
       .catch((err) => {
         setError(err.message);
       });
-  }, []);
+  },[]);
   
   const handleSubmit = async (ev) => {
     ev.preventDefault();
@@ -81,10 +80,6 @@ const CheckoutForm = ({price,history}) => {
       createOrder(item,dispatch)
       history.push('/receipt')
     }
-  };
-
-  const renderSuccess = () => {
-    const item = {actualName,address,city,province,postal_code,price,cartTotal}
   };
 
   const renderForm = () => {

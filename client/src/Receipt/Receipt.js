@@ -1,8 +1,7 @@
-import React, {useState,useEffect,useContext} from 'react'
+import React, {useContext} from 'react'
 import AuthContext from '../AuthContext'
-import {totalPrice,totalItemPrice} from '../cart.utils'
+import {totalPrice} from '../cart.utils'
 import { Table } from 'reactstrap';
-import headerStyle from '../assets/jss/material-kit-pro-react/components/headerStyle';
 
 const divStyle = {
     margin:'21% 0 0 0'
@@ -45,12 +44,16 @@ const receiptformStyle = {
 }
 
 const receiptInnerFormStyle = {
-    width:'50%',
+    width:'40%',
+    justifyContent:'spaceBetween'
+}
+const receiptMiddleFormStyle = {
+    width:'10%',
     justifyContent:'spaceBetween'
 }
 
 const receiptOuterFormStyle = {
-    width:'50%',
+    width:'40%',
     justifyContent:'spaceBetween'
 }
 
@@ -64,7 +67,7 @@ const totalStyle = {
 
 
 const Receipt = () => {
-    const {state,dispatch} = useContext(AuthContext)
+    const {state} = useContext(AuthContext)
     let {username,order,confirmation} = state;
     const cartItems = JSON.parse(sessionStorage.getItem('cart'))
     
@@ -101,21 +104,19 @@ const Receipt = () => {
             <div style={pStyle}>
 
                 <p style={thankYouStyle}>
-                    Thank you for your order!
-                    Your payment was processed!
+                Your payment was successfully processed!
                 </p>
 
                 <p>Thank you for participating in SCC-CAAEYC’s Face Mask Fundraiser.
                 Your generous contribution will help our chapter continue providing professional development opportunities,
                 advocating for quality early learning, and nurturing leaders in the field of early care and education.</p>
 
-                <p>Question? Email </p>
+                <p> Questions? Email scc.caaeyc@gmail.com</p>
 
                 <div>
                     <p style={headerTextStyle}>Order Details</p>
                     <hr /> 
-                    Confirmation Number
-                    <p>{confirmation}</p>
+
                     <div style={receiptformStyle}>
                         <div style={receiptInnerFormStyle}>
                             Shipping to:
@@ -123,8 +124,12 @@ const Receipt = () => {
                             <p>{order.address}</p>
                             <p>{order.city}, {order.province} {order.postal_code}</p>
                         </div>
+                        <div style={receiptMiddleFormStyle}>
+                            Confirmation Number
+                            <p>{confirmation}</p>
+                        </div>
                         <div style={receiptOuterFormStyle}>
-                            Confirmation Email will be sent to:
+                            Confirmation Email sent to:
                             <p>{order.email}</p>
                         </div>
                     </div>

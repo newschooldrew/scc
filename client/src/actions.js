@@ -2,8 +2,6 @@ import axios from 'axios'
 
 export const fetchAllMasks = async (dispatch) =>{
     const res = await axios.get('/fetch-masks');
-        console.log("fetch masks response is: ")
-        console.log(res.data)
         dispatch({type:"FETCH_ALL_MASKS",payload:res.data})
     }
 
@@ -25,7 +23,7 @@ export const removeItemFromCartDB = async id => {
 
 export const changeLimitReached = async (id,dispatch) => {
     console.log(id)
-        const res = await axios.post('/change-limit-reached',{id})
+
         const fetchedMasks = await axios.get('/fetch-masks');
         console.log(fetchedMasks);
         dispatch({type:"FETCH_ALL_MASKS",payload:fetchedMasks.data}) 

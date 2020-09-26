@@ -198,9 +198,8 @@ const totalPrice = items =>{
 }
 
   const msg = {
-      // to: ['drewwperez@gmail.com',email],
-      to: 'drewwperez@gmail.com',
-      from: 'drewwperez@gmail.com', // Use the email address or domain you verified above
+      to: ['scc.president.1939@gmail.com',email],
+      from: 'scc.caaeyc@gmail.com', // Use the email address or domain you verified above
       subject: 'Thank you for your order!',
       html:`<html>
       <body>
@@ -208,34 +207,32 @@ const totalPrice = items =>{
                   <p style="font-size:2em;font-weight:bold; text-align:center;">Thank you for your order!</p>
                   <p style="text-align: center;">
                       We have processed your order and will ship it to you shortly.
-                      You will receive another email from us with tracking information when your mask(s) are shipped.
                       In the meantime if you have any questions or concerns regarding your purchase, please contact
-                      Liliana Alvarez at
+                      SCC at scc.caaeyc@gmail.com
                   </p>
                   <div style="background-color: #D6FFD7; display:flex; flex-direction:row;">
-                  <div style="width: 25%; justify-content:space-between;"></div>
                       <div style="width: 20%; display:flex;flex-direction:column; justify-content:space-between;">
                           Date: 8/21/2020<br/>
                           Order Number: ${confirmationCode}<br/>
                       </div>
-                      <div style="width: 40%; display:flex; flex-direction:column; justify-content:space-between;margin:0 0 0 4%">
+                      <div style="width: 25%; justify-content:space-between;"></div>
+                      <div style="width: 15%; justify-content:space-between;"></div>
+                      <div style="width: 65%; flex-direction:column; justify-content:space-between;padding:0 0 0 4%">
                           Shipping To:<br/>
                           ${actualName} ${lastName}<br/>
                           ${address}<br/>
                           ${city}, ${province} ${postal_code}<br/>
                       </div>
-                    <div style="width: 15%; justify-content:space-between;"></div>
                   </div>
 
               <div style="width: 100%; display:flex; justify-content:space-between;">
-                <div style="width: 15%;"></div>
-                  <div style="width: 50%;">
-                    <table>
+                  <div style="width: 100%;">
+                    <table style="width: 100%;">
                       <tr>
-                          <th style="padding: 25px;">Item</th>
-                          <th style="padding: 25px;">Price</th>
-                          <th style="padding: 25px;">Quantity</th>
-                          <th style="padding: 25px;">Image</th>
+                          <th style="padding: 10px;">Item</th>
+                          <th style="padding: 10px;">Price</th>
+                          <th style="padding: 10px;">Quantity</th>
+                          <th style="padding: 10px;">Image</th>
                           <th></th>
                       </tr>
                       ${cartTotal.map(item =>{
@@ -243,7 +240,7 @@ const totalPrice = items =>{
                                         <td style="text-align:center">${item.title}</td>
                                         <td style="text-align:center">${item.price}</td>
                                         <td style="text-align:center">${item.quantity}</td>
-                                        <td><img style="height:75px;width:75px;" src="${item.url}" /></td><br/><br/>
+                                        <td style="text-align:center"><img style="height:75px;width:75px;" src="${item.url}" /></td><br/><br/>
                                       </tr>
                                       `
                           }).join('')}
@@ -278,8 +275,8 @@ const totalPrice = items =>{
         // send multiple individual emails to multiple recipients 
         // where they don't see each other's email addresses
         console.log("sending mail")
-        // await sgMail.sendMultiple(msg);
-        await sgMail.send(msg);
+        await sgMail.sendMultiple(msg);
+        // await sgMail.send(msg);
       } catch (error) {
         console.error(error);
     

@@ -18,11 +18,7 @@ import {
   Collapse,
   Label,
   FormGroup,
-  Form,
   Input,
-  InputGroupAddon,
-  InputGroupText,
-  InputGroup,
   Container,
   Row,
   Col,
@@ -30,18 +26,14 @@ import {
 } from "reactstrap";
 
 const App = ({history}) => {
-    let itemsArr = [];
+
     const {state,dispatch} = useContext(AuthContext)
     const {allMasks,cartItems,hitCount} = state;
-
-    const [emailFocus, setEmailFocus] = React.useState(false);
-    const [quantity, setQuantities] = useState({})
     
     let sessionCartItems = JSON.parse(sessionStorage.getItem('cart'))
     let sessionAllMasks = JSON.parse(sessionStorage.getItem('allMasks'))
     
     const [filterValue, setFilterValue] = useState({people:false,animals:false,flowers:false})
-    const [values, setValues] = useState({people:false,animals:false,flowers:false});
     const mobileSize = useMediaQuery('(max-width:600px)');
     const tabletSize = useMediaQuery('(max-width:800px)');
 
@@ -356,8 +348,11 @@ const App = ({history}) => {
                                 </CardTitle>
                         </CardBody>
                             <CardFooter>
-                                <CardText className={classes.paper}>Quantity: </CardText>
-                                <CardText className={classes.paper}>{post.quantity == 0 ? (<p className={classes.soldOut}>SOLD OUT</p>): (<div className={classes.quantityStyle}>{post.quantity}</div>)}</CardText>
+                                <CardText className={classes.paper}>Masks Remaining: </CardText>
+                                <CardText className={classes.paper}>{post.quantity == 0 ? 
+                                    (<span className={classes.soldOut}>SOLD OUT</span>): 
+                                    (<span className={classes.quantityStyle}>{post.quantity}</span>)}
+                                </CardText>
                             </CardFooter>
                         </Card>
                     </Col>

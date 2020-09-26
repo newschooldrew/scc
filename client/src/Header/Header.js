@@ -1,22 +1,17 @@
-import React,{useState,useContext,useEffect} from 'react'
+import React,{useContext,useEffect} from 'react'
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import AuthContext from '../AuthContext'
 import AppBar from "@material-ui/core/AppBar";
 import {withRouter} from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles';
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
 import Button from '@material-ui/core/Button';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import CartDropdown from '../CartDropdown/CartDropdown'
 import update from 'immutability-helper'
-import {Link} from 'react-router-dom'
 
 const Header = ({history,match}) => {
     const {state,dispatch} = useContext(AuthContext)
     const {cartItems,toggleCart,hitCount,hideStickyUnit} = state;
-    // const { addToast } = useToasts()
-    let cartAlerts = JSON.parse(sessionStorage.getItem('orderNotification'))
     let cartItemCount = sessionStorage.getItem('cartTotal')
     let orderCountItems = sessionStorage.getItem('orderCount')
     let sessionCartItems = JSON.parse(sessionStorage.getItem('cart'))
@@ -155,10 +150,7 @@ let cartSectionStyle = {
 let mobCartSectionStyle = {
     padding:'0px'
 }
-let mobcartSectionStyle = {
-    padding: '0px',
-    width:'0px'
-}
+
 let mobButtonStyle = {
     height:'35',
     width:'35',
@@ -231,11 +223,9 @@ let fontStyle = {
         appbarHeightDiv:{
             width:'100%',
             margin:'5px',
-            display: 'flex',
             justifyContent: 'spaceBetween',
             display: 'flex',
             flexDirection: 'row',
-            justifyContent:'center',
             alignItems:'center'
         },
         bigFont:{
@@ -292,7 +282,7 @@ let fontStyle = {
                     <div style={mobileSize ? mobIconStyle : iconStyle}>
                         <div style={outerIconStyle}></div>
                         <div style={innerIconStyle}>
-                            <a  onClick={handleHeaderClick} style={clickable}><img src="https://res.cloudinary.com/dzdvrgbjd/image/upload/v1599961709/CAAEYC_SouthernCalifornia_satellite_wide_tcqkpt.png" /></a>
+                            <img alt="" onClick={handleHeaderClick} style={clickable} src="https://res.cloudinary.com/dzdvrgbjd/image/upload/v1599961709/CAAEYC_SouthernCalifornia_satellite_wide_tcqkpt.png" />
                         </div>
                         <div style={outerIconStyle}></div>
                     </div>
