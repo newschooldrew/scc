@@ -45,7 +45,7 @@ const CheckoutForm = ({price,history}) => {
     ev.preventDefault();
     setProcessing(true);
     const item = {actualName,lastName,address,city,province,postal_code,email,price,cartTotal}
-    dispatch({type:"CREATE_ORDER",payload:item})
+    
     createPaymentIntent(item)
     .then((clientSecret) => {
         setClientSecret(clientSecret.client_secret)
@@ -68,7 +68,7 @@ const CheckoutForm = ({price,history}) => {
     console.log("payload:")
     console.log(payload)
 
-    if (payload.error) {
+    if (payload.error || !payload) {
       setError(`Payment failed: ${payload.error.message}`);
       setProcessing(false);
       console.log("[error]", payload.error);
@@ -77,10 +77,10 @@ const CheckoutForm = ({price,history}) => {
       setProcessing(false);
       setMetadata(payload.paymentIntent);
       console.log("[PaymentIntent]", payload.paymentIntent)
-      
+      dispatch({type:"CREATE_ORDER",payload:item})
+      createOrder(item,dispatch)
+      history.push('/receipt')
     }
-    createOrder(item,dispatch)
-    history.push('/receipt')
   };
 
   const renderSuccess = () => {
@@ -139,6 +139,7 @@ const CheckoutForm = ({price,history}) => {
                             className="sr-input"
                             onChange={e => setActualName(e.target.value)}
                             value={actualName}
+                            required
                             />
                 </FormGroup>
                 
@@ -152,6 +153,7 @@ const CheckoutForm = ({price,history}) => {
                         className="sr-input"
                         onChange={e => setLastName(e.target.value)}
                         value={lastName}
+                        required
                         />
                     </FormGroup>
               </div>
@@ -166,6 +168,7 @@ const CheckoutForm = ({price,history}) => {
                               className="sr-input"
                               onChange={e => setAddress(e.target.value)}
                               value={address}
+                              required
                               />
                   </FormGroup>
 
@@ -179,6 +182,7 @@ const CheckoutForm = ({price,history}) => {
                     className="sr-input"
                     onChange={e => setCity(e.target.value)}
                     value={city}
+                    required
                     />
                   </FormGroup>
             </div>
@@ -193,6 +197,7 @@ const CheckoutForm = ({price,history}) => {
                       className="sr-input"
                       onChange={e => setProvince(e.target.value)}
                       value={province}
+                      required
                       />
                   </FormGroup>
                 
@@ -206,6 +211,7 @@ const CheckoutForm = ({price,history}) => {
                       className="sr-input"
                       onChange={e => setPostalCode(e.target.value)}
                       value={postal_code}
+                      required
                       />
                   </FormGroup>
                 
@@ -219,6 +225,7 @@ const CheckoutForm = ({price,history}) => {
                       className="sr-input"
                       onChange={e => setEmail(e.target.value)}
                       value={email}
+                      required
                       />
                   </FormGroup>
           </div>
@@ -226,6 +233,7 @@ const CheckoutForm = ({price,history}) => {
             <CardElement
               className="sr-input sr-card-element"
               options={options}
+              required
               />
 
         {error && <div className="message sr-field-error">{error}</div>}

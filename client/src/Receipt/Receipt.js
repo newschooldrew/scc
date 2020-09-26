@@ -160,7 +160,7 @@ const Receipt = () => {
                 <div style={totalStyle}>
                     <p>Shipping: $5</p>
                     <p>Masks: {totalPrice(cartItems)}</p>
-                    <p style={fontBold}>Total: ${trueTotal}</p>
+                    <p style={fontBold}>Total: ${trueTotal.toFixed(2)}</p>
                 </div>
             </div>
             </div>)

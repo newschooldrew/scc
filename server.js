@@ -212,7 +212,7 @@ const totalPrice = items =>{
                       In the meantime if you have any questions or concerns regarding your purchase, please contact
                       Liliana Alvarez at
                   </p>
-                  <div style="background-color: tan; display:flex; flex-direction:row;">
+                  <div style="background-color: #D6FFD7; display:flex; flex-direction:row;">
                   <div style="width: 25%; justify-content:space-between;"></div>
                       <div style="width: 20%; display:flex;flex-direction:column; justify-content:space-between;">
                           Date: 8/21/2020<br/>
@@ -245,12 +245,12 @@ const totalPrice = items =>{
                                         <td style="text-align:center">${item.quantity}</td>
                                         <td><img style="height:75px;width:75px;" src="${item.url}" /></td><br/><br/>
                                       </tr>
-                                      <tr>
-                                        <td style="text-align:center">Shipping</td>
-                                        <td style="text-align:center">$5</td>
-                                      </tr>
                                       `
                           }).join('')}
+                          <tr>
+                          <td style="text-align:center">Shipping</td>
+                          <td style="text-align:center">$5</td>
+                        </tr>
                           <tr>
                           <td></td>
                           <td></td>
