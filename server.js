@@ -41,8 +41,11 @@ app.get("/public-key", (req, res) => {
   res.send({ publicKey: process.env.PUBLISHABLE_KEY });
 });
 
-app.get('/fetch-masks',async (req,res) =>{
-    const allMasks = await Mask.find({})
+app.post('/fetch-masks',async (req,res) =>{
+  console.log("fetch masks req.body")
+  console.log(req.body)
+  const {type} = req.body;
+    const allMasks = await Mask.find({type})
     console.log(allMasks)
     res.send(allMasks)
 })

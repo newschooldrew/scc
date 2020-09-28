@@ -25,7 +25,7 @@ import {
   UncontrolledTooltip,
 } from "reactstrap";
 
-const App = ({history}) => {
+const App = ({history,match}) => {
 
     const {state,dispatch} = useContext(AuthContext)
     const {allMasks,cartItems,hitCount} = state;
@@ -123,8 +123,8 @@ const App = ({history}) => {
     const classes = useStyles();
 
     useEffect(() =>{
-        fetchAllMasks(dispatch)
-        
+        fetchAllMasks(dispatch,match.params.category)
+
         if(sessionAllMasks && sessionAllMasks.length > 1 && sessionAllMasks !== null){
           console.log("")
         } else{
@@ -132,9 +132,13 @@ const App = ({history}) => {
         }
     },[])
 
+    useEffect(() =>{
+        fetchAllMasks(dispatch,match.params.category)
+
+    },[match.params])
+
 
     useEffect(() =>{
-      fetchAllMasks(dispatch)
       
       
       if(sessionAllMasks && sessionAllMasks.length > 1 && sessionAllMasks !== null){
@@ -181,16 +185,6 @@ const App = ({history}) => {
       filterMasks(targetValue,dispatch)
     }
 
-    const handleMobileChange = e =>{
-      const targetValue = e.target.value;
-      filterMasks(targetValue,dispatch)
-
-        if(filterValue[targetValue] == null){
-          setFilterValue({...filterValue,[targetValue]:true})
-        } else{
-          setFilterValue({...filterValue,[targetValue]:!filterValue[targetValue]})
-        }
-    }
 
     let newTotal;
 
@@ -210,13 +204,13 @@ const App = ({history}) => {
                 </div>) : null}
                 {mobileSize || tabletSize ? (
                 <div className={classes.fullWidth}>
-                  <Button color={filterValue["animals"] == true ? "success" : "info"} type="button" className={classes.buttonCenter} value="animals"  onClick={e => handleMobileChange(e)}>
+                  <Button color={match.params.category == "animals" ? "success" : "info"} type="button" className={classes.buttonCenter} value="animals"  onClick={() => history.push('/animals')}>
                       Animals
                   </Button>
-                  <Button color={filterValue["flowers"] == true ? "success" : "info"} type="button" className={classes.buttonCenter} value="flowers"  onClick={e => handleMobileChange(e)}>
+                  <Button color={match.params.category == "flowers" ? "success" : "info"} type="button" className={classes.buttonCenter} value="flowers"  onClick={() => history.push('/flowers')}>
                       Flowers
                   </Button>
-                  <Button color={filterValue["people"] == true ? "success" : "info"} type="button" className={classes.buttonCenter} value="people"  onClick={e => handleMobileChange(e)}>
+                  <Button color={match.params.category == "people" ? "success" : "info"} type="button" className={classes.buttonCenter} value="people"  onClick={() => history.push('/people')}>
                       People
                   </Button>
                 </div>
@@ -262,26 +256,28 @@ const App = ({history}) => {
                         </CardHeader>
                         <Collapse isOpen={collapses.includes(1)}>
                           <CardBody>
-                            <FormGroup check>
-                              <Label check>
-                                <Input type="checkbox" value="flowers" onChange={e => handleChange(e)}></Input>
+                          <FormGroup tag="fieldset">
+                            <FormGroup>
+                              <Label>
+                                <Input type="radio" defaultChecked={match.params.category == 'flowers' ? true : false} name="radio1" value="flowers" onChange={() => history.push('/flowers')}></Input>
                                 <span className="form-check-sign"></span>
                                 Flowers
                               </Label>
                             </FormGroup>
-                            <FormGroup check>
-                              <Label check>
-                                <Input type="checkbox" value="animals" onChange={e => handleChange(e)}></Input>
+                            <FormGroup>
+                              <Label>
+                                <Input type="radio" defaultChecked={match.params.category == 'animals' ? true : false} name="radio1" value="animals" onChange={() => history.push('/animals')}></Input>
                                 <span className="form-check-sign"></span>
                                 Animals
                               </Label>
                             </FormGroup>
-                            <FormGroup check>
-                              <Label check>
-                                <Input type="checkbox" value="people" onChange={e => handleChange(e)}></Input>
+                            <FormGroup>
+                              <Label>
+                                <Input type="radio" defaultChecked={match.params.category == 'people' ? true : false} name="radio1" value="people" onChange={() => history.push('/people')}></Input>
                                 <span className="form-check-sign"></span>
                                 People
                               </Label>
+                            </FormGroup>
                             </FormGroup>
                           </CardBody>
                         </Collapse>

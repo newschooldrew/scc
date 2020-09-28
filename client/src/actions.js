@@ -1,11 +1,13 @@
 import axios from 'axios'
 
-export const fetchAllMasks = async (dispatch) =>{
-    const res = await axios.get('/fetch-masks');
+export const fetchAllMasks = async (dispatch,type) =>{
+  console.log("fetch mask type:")
+  console.log(type)
+    const res = await axios.post('/fetch-masks',{type});
         dispatch({type:"FETCH_ALL_MASKS",payload:res.data})
     }
 
-export const filterMasks = async (value,dispatch) =>{
+export const filterMasks = async (dispatch,value) =>{
         console.log("filter meals:")
         console.log(value)
         

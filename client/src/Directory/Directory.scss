@@ -1,0 +1,17 @@
+.directory-menu-container{
+    width: 100%;
+    margin:auto;
+    display:flex;
+
+.directory-menu {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 60%;
+    margin:15% 0 0 0;
+  }
+.other-divs{
+    justify-content: space-between;
+    width: 20%;
+}
+}
