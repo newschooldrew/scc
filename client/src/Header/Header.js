@@ -1,4 +1,4 @@
-import React,{useContext,useEffect} from 'react'
+import React,{useContext,useEffect,useRef} from 'react'
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import AuthContext from '../AuthContext'
 import AppBar from "@material-ui/core/AppBar";
@@ -11,12 +11,13 @@ import update from 'immutability-helper'
 
 const Header = ({history,match}) => {
     const {state,dispatch} = useContext(AuthContext)
-    const {cartItems,toggleCart,hitCount,hideStickyUnit} = state;
+    const {cartItems,toggleCart,hideStickyUnit} = state;
     let cartItemCount = sessionStorage.getItem('cartTotal')
     let orderCountItems = sessionStorage.getItem('orderCount')
     let sessionCartItems = JSON.parse(sessionStorage.getItem('cart'))
     let newTotal;
-
+    let hitButton = useRef(0)
+    
     useEffect(() =>{
 
         if(cartItemCount == null){
@@ -36,11 +37,9 @@ const Header = ({history,match}) => {
                 if(cartItems !== undefined){
                     sessionStorage.setItem('cart',JSON.stringify(cartItems))
                 } else{
-                    console.log("cartItems:")
-                    console.log(cartItems)
+                    newTotal = cartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
+                    sessionStorage.setItem('cartTotal',newTotal)
                   }
-                newTotal = cartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
-                sessionStorage.setItem('cartTotal',newTotal)
     
             } catch(e){
                 console.log(e)
@@ -52,6 +51,7 @@ const Header = ({history,match}) => {
         if(cartItemCount == null){
             sessionStorage.setItem('cartTotal',0)
         } 
+        
         if(sessionCartItems && sessionCartItems.length > 0){
             try{
                 update(cartItemCount,{
@@ -59,9 +59,11 @@ const Header = ({history,match}) => {
                 })
                 if(cartItems !== undefined){
                     sessionStorage.setItem('cart',JSON.stringify(cartItems))
-                }
-                newTotal = cartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
-                sessionStorage.setItem('cartTotal',newTotal)
+
+                } else{
+                    newTotal = cartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
+                    sessionStorage.setItem('cartTotal',newTotal)
+                  }
     
             } catch(e){
                 console.log(e)
@@ -69,9 +71,7 @@ const Header = ({history,match}) => {
         }
           
 
-    },[cartItems,hitCount,cartItemCount])
-
-
+    },[cartItems,hitButton,sessionCartItems])
 
         const mobileSize = useMediaQuery('(max-width:600px)');
         const tabletSize = useMediaQuery('(max-width:1000px)');

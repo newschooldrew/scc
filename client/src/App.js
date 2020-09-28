@@ -32,7 +32,7 @@ const App = ({history,match}) => {
     
     let sessionCartItems = JSON.parse(sessionStorage.getItem('cart'))
     let sessionAllMasks = JSON.parse(sessionStorage.getItem('allMasks'))
-    
+    let hitButton = useRef(0)
     const [filterValue, setFilterValue] = useState({people:false,animals:false,flowers:false})
     const mobileSize = useMediaQuery('(max-width:600px)');
     const tabletSize = useMediaQuery('(max-width:800px)');
@@ -152,23 +152,19 @@ const App = ({history,match}) => {
         // try{
           if(cartItems !== undefined || cartItems !== null ){
             sessionStorage.setItem('cart',JSON.stringify(cartItems))
+            newTotal = cartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
+            console.log("newTotal")
+            console.log(newTotal)
+            dispatch({type:"HIT_COUNT",payload:hitButton.current +=1})
+            sessionStorage.setItem('cartTotal',newTotal)
+            console.log("cartItems")
+            console.log(cartItems)
         } else{
             sessionStorage.setItem('cart',[])
           }
 
-        
-            newTotal = cartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
-            sessionStorage.setItem('cartTotal',newTotal)
-
-          console.log("sessionCartItems")
-          console.log(sessionCartItems)
-          console.log("cartItems")
-          console.log(cartItems)
-
-          newTotal = cartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
-
     }
-    },[cartItems,hitCount])
+    },[cartItems,hitButton])
 
     // collapse states and functions
     const [collapses, setCollapses] = React.useState([1]);
