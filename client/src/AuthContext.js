@@ -5,6 +5,7 @@ const AuthContext = createContext({
     hitCount:0,
     order:null,
     confirmation:null,
-    hideStickyUnit:false
+    hideStickyUnit:false,
+    masksCategory:null
 })
 export default AuthContext;

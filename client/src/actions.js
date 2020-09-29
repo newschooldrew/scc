@@ -1,21 +1,18 @@
 import axios from 'axios'
 
-export const fetchAllMasks = async (dispatch,type) =>{
-  console.log("fetch mask type:")
-  console.log(type)
-    const res = await axios.post('/fetch-masks',{type});
+export const fetchAllMasks = async (dispatch) =>{
+    const res = await axios.get('/fetch-masks');
+        console.log("fetch masks response is: ")
+        console.log(res.data)
         dispatch({type:"FETCH_ALL_MASKS",payload:res.data})
     }
 
-export const filterMasks = async (dispatch,value) =>{
-        console.log("filter meals:")
-        console.log(value)
-        
-        const res = await axios.post('/filter-masks',{value});
-            console.log("fetch order from alerts")
-            console.log(res.data)
-            dispatch({type:"FETCH_ALL_MASKS",payload:res.data}) 
-    }
+    export const fetchMaskCategory = async (dispatch,type) =>{
+      console.log("fetch mask type:")
+      console.log(type)
+        const res = await axios.post('/fetch-masks-category',{type});
+            dispatch({type:"FETCH_MASKS_CATEGORY",payload:res.data})
+        }
 
 export const removeItemFromCartDB = async id => {
     console.log(id)

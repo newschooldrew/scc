@@ -69,6 +69,11 @@ const Reducer = (state,{type,payload}) =>{
                 ...state,
                 hideStickyUnit:payload
             }  
+    case "FETCH_MASKS_CATEGORY":
+        return{
+                ...state,
+                masksCategory:payload
+            }  
     }
 }
 export default Reducer;

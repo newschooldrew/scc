@@ -41,7 +41,14 @@ app.get("/public-key", (req, res) => {
   res.send({ publicKey: process.env.PUBLISHABLE_KEY });
 });
 
-app.post('/fetch-masks',async (req,res) =>{
+app.get('/fetch-masks',async (req,res) =>{
+    const allMasks = await Mask.find({})
+    console.log("allMasks")
+    console.log(allMasks)
+    res.send(allMasks)
+})
+
+app.post('/fetch-masks-category',async (req,res) =>{
   console.log("fetch masks req.body")
   console.log(req.body)
   const {type} = req.body;
@@ -212,6 +219,9 @@ const totalPrice = items =>{
                       We have processed your order and will ship it to you shortly.
                       In the meantime if you have any questions or concerns regarding your purchase, please contact
                       SCC at scc.caaeyc@gmail.com
+
+                      Please visit our website at http://www.scaeyc.net
+                      SCC-CAAEYC is a registered 501(c)(3) non-profit organization #23-7081184.
                   </p>
                   <div style="background-color: #D6FFD7; display:flex; flex-direction:row;">
                       <div style="width: 20%; display:flex;flex-direction:column; justify-content:space-between;">

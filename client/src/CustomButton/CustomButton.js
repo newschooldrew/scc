@@ -33,7 +33,7 @@ const CustomButton = ({type,id,title,price,url,qty}) => {
         let myCachedTotal = JSON.parse(sessionStorage.getItem('cartTotal'))
     
         if(myCachedTotal == 1){
-            sessionStorage.removeItem('cart');
+            sessionStorage.setItem('cart',JSON.stringify([]));
             sessionStorage.setItem('cartTotal',0)
         }
         hitButton.current -= 1

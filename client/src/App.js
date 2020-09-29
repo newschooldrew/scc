@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState,useRef} from 'react'
 import AuthContext from './AuthContext'
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import {fetchAllMasks,filterMasks} from './actions'
+import {fetchMaskCategory,fetchAllMasks} from './actions'
 import {Link,withRouter} from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles';
 import CustomButton from './CustomButton/CustomButton'
@@ -28,7 +28,7 @@ import {
 const App = ({history,match}) => {
 
     const {state,dispatch} = useContext(AuthContext)
-    const {allMasks,cartItems,hitCount} = state;
+    const {allMasks,cartItems,masksCategory} = state;
     
     let sessionCartItems = JSON.parse(sessionStorage.getItem('cart'))
     let sessionAllMasks = JSON.parse(sessionStorage.getItem('allMasks'))
@@ -123,30 +123,33 @@ const App = ({history,match}) => {
     const classes = useStyles();
 
     useEffect(() =>{
-        fetchAllMasks(dispatch,match.params.category)
-
-        if(sessionAllMasks && sessionAllMasks.length > 1 && sessionAllMasks !== null){
-          console.log("")
-        } else{
-          sessionStorage.setItem('allMasks',JSON.stringify(allMasks))
-        }
-    },[])
-
-    useEffect(() =>{
-        fetchAllMasks(dispatch,match.params.category)
-
-    },[match.params])
-
-
-    useEffect(() =>{
-      
+      fetchAllMasks(dispatch)
+      fetchMaskCategory(dispatch,match.params.category)
       
       if(sessionAllMasks && sessionAllMasks.length > 1 && sessionAllMasks !== null){
         console.log("")
       } else{
+        console.log("allMasks")
+        console.log(allMasks)
         sessionStorage.setItem('allMasks',JSON.stringify(allMasks))
       }
+    },[])
+    
+    useEffect(() =>{
+
+      fetchMaskCategory(dispatch,match.params.category)
+    },[match.params])
+    
+    
+    useEffect(() =>{
       
+      if(sessionAllMasks && sessionAllMasks.length > 1 && sessionAllMasks !== null){
+        console.log("")
+      } else{
+        console.log("allMasks")
+        console.log(allMasks)
+        sessionStorage.setItem('allMasks',JSON.stringify(allMasks))
+      }
 
       if(cartItems && cartItems.length > 0){
         // try{
@@ -159,9 +162,7 @@ const App = ({history,match}) => {
             sessionStorage.setItem('cartTotal',newTotal)
             console.log("cartItems")
             console.log(cartItems)
-        } else{
-            sessionStorage.setItem('cart',[])
-          }
+        }
 
     }
     },[cartItems,hitButton])
@@ -175,12 +176,6 @@ const App = ({history,match}) => {
         setCollapses([...collapses, collapse]);
       }
     };
-
-    const handleChange = e =>{
-      const targetValue = e.target.value;
-      filterMasks(targetValue,dispatch)
-    }
-
 
     let newTotal;
 
@@ -198,7 +193,7 @@ const App = ({history,match}) => {
                     <p>Filter Mask by Type</p>
                   </div>
                 </div>) : null}
-                {mobileSize || tabletSize ? (
+                {mobileSize && history.location.pathname !== '/checkout' || tabletSize && history.location.pathname !== '/checkout' ? (
                 <div className={classes.fullWidth}>
                   <Button color={match.params.category == "animals" ? "success" : "info"} type="button" className={classes.buttonCenter} value="animals"  onClick={() => history.push('/animals')}>
                       Animals
@@ -255,21 +250,21 @@ const App = ({history,match}) => {
                           <FormGroup tag="fieldset">
                             <FormGroup>
                               <Label>
-                                <Input type="radio" defaultChecked={match.params.category == 'flowers' ? true : false} name="radio1" value="flowers" onChange={() => history.push('/flowers')}></Input>
+                                <Input type="radio" defaultChecked={match.params.category == 'flowers' ? true : false} name="radio1" value="flowers" onChange={() => history.push('/shopping/flowers')}></Input>
                                 <span className="form-check-sign"></span>
                                 Flowers
                               </Label>
                             </FormGroup>
                             <FormGroup>
                               <Label>
-                                <Input type="radio" defaultChecked={match.params.category == 'animals' ? true : false} name="radio1" value="animals" onChange={() => history.push('/animals')}></Input>
+                                <Input type="radio" defaultChecked={match.params.category == 'animals' ? true : false} name="radio1" value="animals" onChange={() => history.push('/shopping/animals')}></Input>
                                 <span className="form-check-sign"></span>
                                 Animals
                               </Label>
                             </FormGroup>
                             <FormGroup>
                               <Label>
-                                <Input type="radio" defaultChecked={match.params.category == 'people' ? true : false} name="radio1" value="people" onChange={() => history.push('/people')}></Input>
+                                <Input type="radio" defaultChecked={match.params.category == 'people' ? true : false} name="radio1" value="people" onChange={() => history.push('/shopping/people')}></Input>
                                 <span className="form-check-sign"></span>
                                 People
                               </Label>
@@ -284,7 +279,7 @@ const App = ({history,match}) => {
                 )}
             <Col md="9">
                 <Row>
-            {allMasks && allMasks.map((post,i) =>{
+            {masksCategory && masksCategory.map((post,i) =>{
                 const id = post._id;
                 const title = post.title;
                 const price = post.price;

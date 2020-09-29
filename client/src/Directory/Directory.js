@@ -18,17 +18,17 @@ const Directory = ({history}) => {
         {
             title:"Flowers",
             imageUrl:"https://res.cloudinary.com/dzdvrgbjd/image/upload/v1601261791/masks_flowers/IMG_4957_pb8qzx.jpg",
-            linkUrl:"flowers"
+            linkUrl:"shopping/flowers"
         },
         {
             title:"People",
             imageUrl:"https://res.cloudinary.com/dzdvrgbjd/image/upload/a_90/v1601138712/masks_people/IMG_0729_bhjf3x.jpg",
-            linkUrl:"people"
+            linkUrl:"shopping/people"
         },
         {
             title:"Birds & Butterflies",
             imageUrl:"https://res.cloudinary.com/dzdvrgbjd/image/upload/a_270/v1601139340/masks_birds_butterflies/IMG_4738_kxur2x.jpg",
-            linkUrl:"birds"
+            linkUrl:"shopping/animals"
         }
     ]
 

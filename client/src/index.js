@@ -21,9 +21,9 @@ ReactDOM.render(
         <BrowserRouter>
           <Header />
           <Route exact path="/" component={Directory} />
-          <Route exact path="/:category" component={App} />
           <Route exact path="/checkout" component={Checkout} />
           <Route exact path="/receipt" component={Receipt} />
+          <Route path="/shopping/:category" component={App} />
           <Redirect to="/" />
         </BrowserRouter>
     </AuthProvider>

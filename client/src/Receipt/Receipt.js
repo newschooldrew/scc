@@ -111,6 +111,7 @@ const Receipt = () => {
                 Your generous contribution will help our chapter continue providing professional development opportunities,
                 advocating for quality early learning, and nurturing leaders in the field of early care and education.</p>
 
+                <p> Please visit our website at http://www.scaeyc.net</p>
                 <p> Questions? Email scc.caaeyc@gmail.com</p>
 
                 <div>

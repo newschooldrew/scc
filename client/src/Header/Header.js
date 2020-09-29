@@ -8,10 +8,11 @@ import Button from '@material-ui/core/Button';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import CartDropdown from '../CartDropdown/CartDropdown'
 import update from 'immutability-helper'
+import {fetchAllMasks} from '../actions'
 
 const Header = ({history,match}) => {
     const {state,dispatch} = useContext(AuthContext)
-    const {cartItems,toggleCart,hideStickyUnit} = state;
+    const {cartItems,toggleCart,hideStickyUnit,hitCount} = state;
     let cartItemCount = sessionStorage.getItem('cartTotal')
     let orderCountItems = sessionStorage.getItem('orderCount')
     let sessionCartItems = JSON.parse(sessionStorage.getItem('cart'))
@@ -24,27 +25,13 @@ const Header = ({history,match}) => {
             sessionStorage.setItem('cartTotal',0)
         } 
 
-        if(sessionCartItems && sessionCartItems.length > 0){
-            try{
-                update(cartItems,{
-                    $set:sessionCartItems
-                })
-
-                if(sessionCartItems == null){
-                    sessionStorage.setItem('cart',JSON.stringify(cartItems))
-                }
-
-                if(cartItems !== undefined){
-                    sessionStorage.setItem('cart',JSON.stringify(cartItems))
+                if(cartItems == undefined || cartItems == 'null' ){
+                    console.log("CartItems is undefined")
                 } else{
                     newTotal = cartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
+                    sessionStorage.setItem('cart',JSON.stringify(cartItems))
                     sessionStorage.setItem('cartTotal',newTotal)
-                  }
-    
-            } catch(e){
-                console.log(e)
-            }
-        }
+                }
     },[])
 
     useEffect(() =>{              
@@ -52,26 +39,16 @@ const Header = ({history,match}) => {
             sessionStorage.setItem('cartTotal',0)
         } 
         
-        if(sessionCartItems && sessionCartItems.length > 0){
-            try{
-                update(cartItemCount,{
-                    $set:sessionCartItems.length
-                })
-                if(cartItems !== undefined){
-                    sessionStorage.setItem('cart',JSON.stringify(cartItems))
-
-                } else{
-                    newTotal = cartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
-                    sessionStorage.setItem('cartTotal',newTotal)
-                  }
-    
-            } catch(e){
-                console.log(e)
-            }
+        if(cartItems == undefined || cartItems == 'null' ){
+            console.log("CartItems is undefined")
+        } else{
+            newTotal = cartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
+            sessionStorage.setItem('cart',JSON.stringify(cartItems))
+            sessionStorage.setItem('cartTotal',newTotal)
         }
           
 
-    },[cartItems,hitButton,sessionCartItems])
+    },[sessionCartItems,cartItems,hitCount,hitButton])
 
         const mobileSize = useMediaQuery('(max-width:600px)');
         const tabletSize = useMediaQuery('(max-width:1000px)');
@@ -90,6 +67,7 @@ const handleHeaderClick = () => {
 }
 
 const handleCheckoutClick = () =>{
+    fetchAllMasks(dispatch)
     history.push('/checkout')
     console.log(match.params)
     if(history.location.pathname){
