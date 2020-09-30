@@ -288,7 +288,7 @@ const totalPrice = items =>{
         // send multiple individual emails to multiple recipients 
         // where they don't see each other's email addresses
         console.log("sending mail")
-        await sgMail.sendMultiple(msg);
+        // await sgMail.sendMultiple(msg);
         // await sgMail.send(msg);
       } catch (error) {
         console.error(error);

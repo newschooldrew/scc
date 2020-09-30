@@ -75,8 +75,6 @@ function ShoppingCartPage({history}) {
       sessionStorage.setItem('cartTotal',newTotal)
       sessionStorage.setItem('cartSum',sumTotal)
   }
-  
-        return () => trueTotal = null;
 
   },[sessionItems,cartItems,hitCount,hitButton,sessionCartItemTotal]);
   
@@ -86,8 +84,6 @@ function ShoppingCartPage({history}) {
     const item = {id,title,price};
     dispatch({type:"ADD_ITEM_TO_CART",payload:item})
     dispatch({type:"HIT_COUNT",payload:hitButton.current +=1})
-    
-    hitButton.current += 1
 
     let existingNum
     if(sessionStorage.getItem(id)){
@@ -108,10 +104,11 @@ const removeItemFromCart = (id,title,price) =>{
   console.log(cartItems)
   console.log(sessionItems)
   const item = {id,title,price};
+
   dispatch({type:"REMOVE_ITEM_FROM_CART",payload:item})
+  dispatch({type:"HIT_COUNT",payload:hitButton.current -=1})
   let myCachedTotal = JSON.parse(sessionStorage.getItem('cartTotal'))
  
-  hitButton.current -= 1
 
   if(myCachedTotal.length == 1){
     sessionStorage.setItem('cart',JSON.stringify([]));
@@ -184,8 +181,8 @@ const lineItem = {
 
 const classes = useStyles();
 let maskTotal = cartItems ? totalPrice(cartItems) :totalPrice(sessionItems)
-let clientTotal = parseFloat(maskTotal + 5.00)
-let trueTotal = parseFloat(sumTotal) + 5.00;
+let clientTotal = parseFloat(maskTotal) + 5.00
+
 if(!cartItems && !sessionItems) return (<div>loading checkout items</div>)
 
   return (
@@ -492,7 +489,7 @@ if(!cartItems && !sessionItems) return (<div>loading checkout items</div>)
                                           </Grid>
                                           <Grid item xs={6}>
                                         <Elements stripe={stripePromise}>
-                                          <CheckoutForm price={trueTotal} />
+                                          <CheckoutForm price={clientTotal} />
                                         </Elements>
                                         </Grid>
                                         <Grid item xs={3}>

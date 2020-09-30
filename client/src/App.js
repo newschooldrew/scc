@@ -156,8 +156,6 @@ const App = ({history,match}) => {
           if(cartItems !== undefined || cartItems !== null ){
             sessionStorage.setItem('cart',JSON.stringify(cartItems))
             newTotal = cartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
-            console.log("newTotal")
-            console.log(newTotal)
             dispatch({type:"HIT_COUNT",payload:hitButton.current +=1})
             sessionStorage.setItem('cartTotal',newTotal)
             console.log("cartItems")
@@ -195,13 +193,13 @@ const App = ({history,match}) => {
                 </div>) : null}
                 {mobileSize && history.location.pathname !== '/checkout' || tabletSize && history.location.pathname !== '/checkout' ? (
                 <div className={classes.fullWidth}>
-                  <Button color={match.params.category == "animals" ? "success" : "info"} type="button" className={classes.buttonCenter} value="animals"  onClick={() => history.push('/animals')}>
+                  <Button color={match.params.category == "animals" ? "success" : "info"} type="button" className={classes.buttonCenter} value="animals"  onClick={() => history.push('/shopping/animals')}>
                       Animals
                   </Button>
-                  <Button color={match.params.category == "flowers" ? "success" : "info"} type="button" className={classes.buttonCenter} value="flowers"  onClick={() => history.push('/flowers')}>
+                  <Button color={match.params.category == "flowers" ? "success" : "info"} type="button" className={classes.buttonCenter} value="flowers"  onClick={() => history.push('/shopping/flowers')}>
                       Flowers
                   </Button>
-                  <Button color={match.params.category == "people" ? "success" : "info"} type="button" className={classes.buttonCenter} value="people"  onClick={() => history.push('/people')}>
+                  <Button color={match.params.category == "people" ? "success" : "info"} type="button" className={classes.buttonCenter} value="people"  onClick={() => history.push('/shopping/people')}>
                       People
                   </Button>
                 </div>

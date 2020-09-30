@@ -31,13 +31,13 @@ const CustomButton = ({type,id,title,price,url,qty}) => {
         dispatch({type:"REMOVE_ITEM_FROM_CART",payload:item})
         dispatch({type:"HIT_COUNT",payload:hitButton.current -=1})
         let myCachedTotal = JSON.parse(sessionStorage.getItem('cartTotal'))
-    
+        
         if(myCachedTotal == 1){
             sessionStorage.setItem('cart',JSON.stringify([]));
             sessionStorage.setItem('cartTotal',0)
+            dispatch({type:"EMPTY_CART"})
         }
-        hitButton.current -= 1
-
+        
             let existingNum = parseInt(sessionStorage.getItem(id));
             sessionStorage.setItem(`${id}`,existingNum - 1)
     

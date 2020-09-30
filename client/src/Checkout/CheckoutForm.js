@@ -39,6 +39,21 @@ const CheckoutForm = ({price,history}) => {
         setError(err.message);
       });
   },[]);
+
+  useEffect(() => {
+    const item = {actualName,address,city,province,postal_code,email,price,cartTotal}
+      createPaymentIntent(item)
+      .then((clientSecret) => {
+          console.log("clientSecret:")
+          console.log(clientSecret.client_secret)
+          setClientSecret(clientSecret.client_secret)
+        console.log("clientSecret:")
+        console.log(clientSecret)
+      })
+      .catch((err) => {
+        setError(err.message);
+      });
+  },[price]);
   
   const handleSubmit = async (ev) => {
     ev.preventDefault();

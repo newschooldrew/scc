@@ -42,13 +42,14 @@ const Header = ({history,match}) => {
         if(cartItems == undefined || cartItems == 'null' ){
             console.log("CartItems is undefined")
         } else{
-            newTotal = cartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
+            
             sessionStorage.setItem('cart',JSON.stringify(cartItems))
+            newTotal = cartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
             sessionStorage.setItem('cartTotal',newTotal)
         }
           
 
-    },[sessionCartItems,cartItems,hitCount,hitButton])
+    },[cartItems,sessionCartItems,hitCount,hitButton,orderCountItems,cartItemCount])
 
         const mobileSize = useMediaQuery('(max-width:600px)');
         const tabletSize = useMediaQuery('(max-width:1000px)');
