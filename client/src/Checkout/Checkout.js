@@ -1,5 +1,5 @@
 /*eslint-disable*/
-import React, {useEffect,useContext,useRef,useState} from "react";
+import React, {useContext,useRef} from "react";
 import AuthContext from '../AuthContext'
 import {Link} from 'react-router-dom'
 // nodejs library that concatenates classes
@@ -37,14 +37,12 @@ import {fetchAllMasks,getPublicStripeKey} from '../actions'
 import CheckoutForm from './CheckoutForm'
 import { ButtonGroup, Table, UncontrolledTooltip } from "reactstrap";
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import update from 'react-addons-update'
 
 const useStyles = makeStyles(shoppingCartStyle);
 
 function ShoppingCartPage({history}) {
   const {state,dispatch} = useContext(AuthContext)
   const {allMasks,cartItems,hitCount} = state;
-  const [usingCartItems,setUsingCartItems] = useState('');
   const mobileSize = useMediaQuery('(max-width:600px)');
   const stripePromise = getPublicStripeKey().then(key => {
     console.log("key:")
@@ -52,38 +50,46 @@ function ShoppingCartPage({history}) {
     return loadStripe(key)
   });
   let hitButton = useRef(0),
-      sessionIdVar,
-      newTotal,
-      sessionCartItemTotal = JSON.parse(sessionStorage.getItem('cartTotal')),
-      sumTotal = JSON.parse(sessionStorage.getItem('cartSum')),
-      sessionItems = JSON.parse(sessionStorage.getItem('cart'))
+      sessionCartItems = JSON.parse(sessionStorage.getItem('cart'))
 
   React.useEffect(() => {
 
     fetchAllMasks(dispatch)
   },[]);
 
-  useEffect(() => {
-    console.log("use effect hit!")
+  React.useEffect(() => {
+    fetchAllMasks(dispatch)
+    if(cartItems && cartItems.length > 0){
+      try{
+        if(cartItems !== undefined){
+          sessionStorage.setItem('cart',JSON.stringify(cartItems))
+      }
+          newTotal = cartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
+          sessionStorage.setItem('cartTotal',newTotal)
 
-    if(cartItems == undefined || cartItems == 'null' ){
-      console.log("CartItems is undefined")
-  } else{
-      newTotal = cartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
-      sumTotal = cartItems.reduce((acc,cartItem) => acc + cartItem.price,0)
-      sessionStorage.setItem('cart',JSON.stringify(cartItems))
-      sessionStorage.setItem('cartTotal',newTotal)
-      sessionStorage.setItem('cartSum',sumTotal)
+        console.log("sessionCartItems")
+        console.log(sessionCartItems)
+        console.log("cartItems")
+        console.log(cartItems)
+
+        newTotal = cartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
+          // if(sessionCartItems == null){
+          // } else{
+          //   newTotal = sessionCartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
+          // }
+
+      } catch(e){
+          console.log("cartItems is empty")
+      }
   }
-
-  },[sessionItems,cartItems,hitCount,hitButton,sessionCartItemTotal]);
+  },[cartItems,hitCount]);
   
   const addItemToCart = (id,title,price) =>{
-    console.log(cartItems)
-    console.log(sessionItems)
     const item = {id,title,price};
     dispatch({type:"ADD_ITEM_TO_CART",payload:item})
     dispatch({type:"HIT_COUNT",payload:hitButton.current +=1})
+    
+    hitButton.current += 1
 
     let existingNum
     if(sessionStorage.getItem(id)){
@@ -101,35 +107,27 @@ const goBackToShopping = () =>{
 }
 
 const removeItemFromCart = (id,title,price) =>{
-  console.log(cartItems)
-  console.log(sessionItems)
   const item = {id,title,price};
-
   dispatch({type:"REMOVE_ITEM_FROM_CART",payload:item})
   dispatch({type:"HIT_COUNT",payload:hitButton.current -=1})
   let myCachedTotal = JSON.parse(sessionStorage.getItem('cartTotal'))
  
+  hitButton.current -= 1
 
-  if(myCachedTotal.length == 1){
-    sessionStorage.setItem('cart',JSON.stringify([]));
+  if(myCachedTotal == 1){
+      sessionStorage.removeItem('cart');
       sessionStorage.setItem('cartTotal',0)
-      dispatch({type:"EMPTY_CART"})
   }
     let existingNum = parseInt(sessionStorage.getItem(id));
     sessionStorage.setItem(`${id}`,existingNum - 1)
-    sessionStorage.removeItem(`${id}`)
 }
 
   const handleClick = (item,id) =>{
-    hitButton.current -= 1
     let cartCount = JSON.parse(sessionStorage.getItem('cart'))
-    let existingNum = parseInt(sessionStorage.getItem(id));
-    sessionStorage.setItem(`${id}`,existingNum - 1)
     sessionStorage.removeItem(`${id}`)
     if(cartCount && cartCount.length == 1){
-        sessionStorage.setItem('cart',JSON.stringify([]));
+        sessionStorage.removeItem('cart');
         sessionStorage.setItem('cartTotal',0)
-        dispatch({type:"EMPTY_CART"})
     }else{
         dispatch({type:"CLEAR_CART",payload:item})
     }
@@ -180,9 +178,9 @@ const lineItem = {
 }
 
 const classes = useStyles();
-let maskTotal = cartItems ? totalPrice(cartItems) :totalPrice(sessionItems)
-let clientTotal = parseFloat(maskTotal) + 5.00
-
+let sessionItems = JSON.parse(sessionStorage.getItem('cart'))
+let maskTotal = totalPrice(sessionItems);
+let trueTotal = parseFloat(maskTotal) + 5.00;
 if(!cartItems && !sessionItems) return (<div>loading checkout items</div>)
 
   return (
@@ -215,134 +213,8 @@ if(!cartItems && !sessionItems) return (<div>loading checkout items</div>)
                           <CardBody plain>
                             <Button color="info" onClick={() => goBackToShopping()}>Back to Shopping</Button>
                     {(() => {
-                      let sessionItems = JSON.parse(sessionStorage.getItem('cart'))
-                      if(cartItems && cartItems.length >= 1){
-                        let cartItemCount = JSON.parse(sessionStorage.getItem('cart'))
-                        let matchCartItemArr = [];
-  
-                        return(
-                          cartItems.map((item,idx) =>{
-                            const {id,title,price,quantity} = item;
-                            console.log("quantity:")
-                            console.log(quantity)
-  
-                            if(allMasks){
-                            allMasks.map(mask =>{
-                              if(mask._id == id){ 
-                                matchCartItemArr.push(mask)
-                              }
-                              console.log("matchCartItemArr:")
-                              console.log(matchCartItemArr)
-                            })
-                          }
-                            let currentItem = matchCartItemArr.filter(item => item._id == id)
-                        
-                            let tableHeadData;
-  
-                            if(!mobileSize){
-                              tableHeadData = [
-                                "",
-                                "PRODUCT",
-                                "PRICE",
-                                "QTY",
-                                "AMOUNT",
-                                ""
-                              ]
-                            } else{
-                              tableHeadData = [
-                                "",
-                                "PRICE",
-                                "QTY",
-                                "AMOUNT",
-                                ""
-                              ]                            
-                            }
-  
-                              let tableData = [  
-                                    // image
-                                            <div className={classes.imgContainer} key={1}>
-                                            <img src={item.url} alt="..." className={classes.img} />
-                                              </div>,
-                                    // PRODUCT
-                                                <span key={1}>
-                                                <a href="#jacket" className={classes.tdNameAnchor}>
-                                                  {item.title}
-                                                </a>
-                                                <br />
-                                                <small className={classes.tdNameSmall}>
-                                                  {item.description}
-                                                </small>
-                                              </span>,
-                                    // PRICE
-                                              <span key={1}>
-                                                <small className={classes.tdNumberSmall}>$</small> {item.price}
-                                              </span>,
-                                  // QTY
-                                              <span key={1}>
-                                                {` `}
-                                                <div className={classes.buttonGroup}>
-                                                
-                                                  <Button
-                                                    color="info"
-                                                    size="sm"
-                                                    round
-                                                    disabled={currentItem[0].quantity == quantity}
-                                                    onClick={() => addItemToCart(id,title,price)}
-                                                  >
-                                                    <i className="now-ui-icons ui-1_simple-add"></i>
-                                                  </Button>
-                                                  <p style={quantityStyle}>{cartItemCount[idx].quantity}</p>
-                                                  <Button
-                                                    color="info"
-                                                    size="sm"
-                                                    round
-                                                    onClick={() => removeItemFromCart(id,title,price)}
-                                                  >
-                                                    <i className="now-ui-icons ui-1_simple-delete"></i>
-                                                  </Button>
-  
-                                                </div>
-                                              </span>,
-                                  // AMOUNT
-                                              <span key={1}>
-                                                <small className={classes.tdNumberSmall}>$</small> {totalItemPrice(item)}
-                                              </span>,
-                                              <Tooltip
-                                                key={1}
-                                                id="close1"
-                                                title="Remove item"
-                                                placement="left"
-                                                classes={{ tooltip: classes.tooltip }}
-                                              >
-                                                <Button link className={classes.actionButton}>
-                                                  <Close  onClick={() => handleClick(item,id)}/>
-                                                </Button>
-                                              </Tooltip>
-                                        ]
-  
-                                        if(mobileSize){
-                                          tableData = tableData.filter((data,idx) =>{
-                                                if(idx !== 1){
-                                                  return data 
-                                                }
-                                          })
-                                        }
-  
-                                      return(
-                                            <CheckoutTable
-                                                key={id}
-                                                tableHead={tableHeadData}
-                                                tableData={[tableData]}
-                                              />
-                                            )
-                                    })
-                                            // end of sessionItems map
-  
-                              )
-                        } 
-                        else if(sessionItems && sessionItems.length >= 1) {
-                      console.log("using sessionItems")
-                      // setUsingCartItems(false)
+                    if(sessionItems && sessionItems.length > 0){
+                      
                       let cartItemCount = JSON.parse(sessionStorage.getItem('cart'))
                       let myMasks = JSON.parse(sessionStorage.getItem('allMasks'))
                       let matchCartItemArr = [];
@@ -354,8 +226,6 @@ if(!cartItems && !sessionItems) return (<div>loading checkout items</div>)
                           console.log(quantity)
 
                           if(myMasks){
-                            console.log("myMasks")
-                            console.log(myMasks)
                             myMasks.map(mask =>{
                             if(mask._id == id){ 
                               matchCartItemArr.push(mask)
@@ -464,9 +334,135 @@ if(!cartItems && !sessionItems) return (<div>loading checkout items</div>)
                                           )
                                   })
                                           // end of sessionItems map
+
                             )
-                          } else {return <p style={noItemsMargin}>No items left in this cart</p>}
+                          } else if(cartItems && cartItems.length > 1){
+                            let cartItemCount = JSON.parse(sessionStorage.getItem('cart'))
+                            let matchCartItemArr = [];
+      
+                            return(
+                              cartItems.map((item,idx) =>{
+                                const {id,title,price,quantity} = item;
+                                console.log("quantity:")
+                                console.log(quantity)
+      
+                                if(allMasks){
+                                allMasks.map(mask =>{
+                                  if(mask._id == id){ 
+                                    matchCartItemArr.push(mask)
+                                  }
+                                  console.log("matchCartItemArr:")
+                                  console.log(matchCartItemArr)
+                                })
+                              }
+                                let currentItem = matchCartItemArr.filter(item => item._id == id)
+                            
+                                let tableHeadData;
+      
+                                if(!mobileSize){
+                                  tableHeadData = [
+                                    "",
+                                    "PRODUCT",
+                                    "PRICE",
+                                    "QTY",
+                                    "AMOUNT",
+                                    ""
+                                  ]
+                                } else{
+                                  tableHeadData = [
+                                    "",
+                                    "PRICE",
+                                    "QTY",
+                                    "AMOUNT",
+                                    ""
+                                  ]                            
+                                }
+      
+                                  let tableData = [  
+                                        // image
+                                                <div className={classes.imgContainer} key={1}>
+                                                <img src={item.url} alt="..." className={classes.img} />
+                                                  </div>,
+                                        // PRODUCT
+                                                    <span key={1}>
+                                                    <a href="#jacket" className={classes.tdNameAnchor}>
+                                                      {item.title}
+                                                    </a>
+                                                    <br />
+                                                    <small className={classes.tdNameSmall}>
+                                                      {item.description}
+                                                    </small>
+                                                  </span>,
+                                        // PRICE
+                                                  <span key={1}>
+                                                    <small className={classes.tdNumberSmall}>$</small> {item.price}
+                                                  </span>,
+                                      // QTY
+                                                  <span key={1}>
+                                                    {` `}
+                                                    <div className={classes.buttonGroup}>
+                                                    
+                                                      <Button
+                                                        color="info"
+                                                        size="sm"
+                                                        round
+                                                        disabled={currentItem[0].quantity == quantity}
+                                                        onClick={() => addItemToCart(id,title,price)}
+                                                      >
+                                                        <i className="now-ui-icons ui-1_simple-add"></i>
+                                                      </Button>
+                                                      <p style={quantityStyle}>{cartItemCount[idx].quantity}</p>
+                                                      <Button
+                                                        color="info"
+                                                        size="sm"
+                                                        round
+                                                        onClick={() => removeItemFromCart(id,title,price)}
+                                                      >
+                                                        <i className="now-ui-icons ui-1_simple-delete"></i>
+                                                      </Button>
+      
+                                                    </div>
+                                                  </span>,
+                                      // AMOUNT
+                                                  <span key={1}>
+                                                    <small className={classes.tdNumberSmall}>$</small> {totalItemPrice(item)}
+                                                  </span>,
+                                                  <Tooltip
+                                                    key={1}
+                                                    id="close1"
+                                                    title="Remove item"
+                                                    placement="left"
+                                                    classes={{ tooltip: classes.tooltip }}
+                                                  >
+                                                    <Button link className={classes.actionButton}>
+                                                      <Close  onClick={() => handleClick(item,id)}/>
+                                                    </Button>
+                                                  </Tooltip>
+                                            ]
+      
+                                            if(mobileSize){
+                                              tableData = tableData.filter((data,idx) =>{
+                                                    if(idx !== 1){
+                                                      return data 
+                                                    }
+                                              })
+                                            }
+      
+                                          return(
+                                                <CheckoutTable
+                                                    key={id}
+                                                    tableHead={tableHeadData}
+                                                    tableData={[tableData]}
+                                                  />
+                                                )
+                                        })
+                                                // end of sessionItems map
+      
+                                  )
+                            }
                                       // end of sessionItems length
+
+                                      else {return <p style={noItemsMargin}>No items left in this cart</p>}
                                     })()
                                     }
                                           <div style={itemDiv}>
@@ -481,7 +477,7 @@ if(!cartItems && !sessionItems) return (<div>loading checkout items</div>)
                                           </div>                            
                                       <div style={totalPriceDivStyle}>
                                         <div style={totalPriceOuterStyle}></div>
-                                            <p style={totalPriceStyle}>Total: ${clientTotal.toFixed(2)}</p>
+                                            <p style={totalPriceStyle}>Total: ${trueTotal.toFixed(2)}</p>
                                         <div style={totalPriceOuterStyle}></div>
                                           </div>
                                       <Grid item xs={3}></Grid>
@@ -489,7 +485,7 @@ if(!cartItems && !sessionItems) return (<div>loading checkout items</div>)
                                           </Grid>
                                           <Grid item xs={6}>
                                         <Elements stripe={stripePromise}>
-                                          <CheckoutForm price={clientTotal} />
+                                          <CheckoutForm price={trueTotal} />
                                         </Elements>
                                         </Grid>
                                         <Grid item xs={3}>

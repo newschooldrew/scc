@@ -194,7 +194,7 @@ const App = ({history,match}) => {
                 {mobileSize && history.location.pathname !== '/checkout' || tabletSize && history.location.pathname !== '/checkout' ? (
                 <div className={classes.fullWidth}>
                   <Button color={match.params.category == "animals" ? "success" : "info"} type="button" className={classes.buttonCenter} value="animals"  onClick={() => history.push('/shopping/animals')}>
-                      Animals
+                      Birds/Butterflies
                   </Button>
                   <Button color={match.params.category == "flowers" ? "success" : "info"} type="button" className={classes.buttonCenter} value="flowers"  onClick={() => history.push('/shopping/flowers')}>
                       Flowers
@@ -257,7 +257,7 @@ const App = ({history,match}) => {
                               <Label>
                                 <Input type="radio" defaultChecked={match.params.category == 'animals' ? true : false} name="radio1" value="animals" onChange={() => history.push('/shopping/animals')}></Input>
                                 <span className="form-check-sign"></span>
-                                Animals
+                                Birds/Butterflies
                               </Label>
                             </FormGroup>
                             <FormGroup>

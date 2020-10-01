@@ -4,11 +4,11 @@ import {withRouter} from 'react-router-dom'
 import './CartDropdown.scss'
 
 const CartDropdown = ({cartItems, history}) =>
-{console.log("dropdown cartItems:")
-    console.log(typeof cartItems)
-    console.log(cartItems)
-    return(
-    <div className='cart-dropdown'>
+{
+    return (<>
+        {history.location.pathname == '/checkout' || history.location.pathname == '/receipt' ?
+        null :
+    (<div className='cart-dropdown'>
         <div />
         {
             cartItems ? (
@@ -20,6 +20,9 @@ const CartDropdown = ({cartItems, history}) =>
                 Go To Checkout
             </button>
         </div>
-)}
+    )}
+    </>
+    )
+}
 
 export default withRouter(CartDropdown)

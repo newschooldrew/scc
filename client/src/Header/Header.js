@@ -42,14 +42,15 @@ const Header = ({history,match}) => {
         if(cartItems == undefined || cartItems == 'null' ){
             console.log("CartItems is undefined")
         } else{
-            
+            console.log("header UE is hit")
             sessionStorage.setItem('cart',JSON.stringify(cartItems))
             newTotal = cartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
+            dispatch({type:"HIT_COUNT",payload:hitButton.current +=1})
             sessionStorage.setItem('cartTotal',newTotal)
         }
           
 
-    },[cartItems,sessionCartItems,hitCount,hitButton,orderCountItems,cartItemCount])
+    },[cartItems,hitButton])
 
         const mobileSize = useMediaQuery('(max-width:600px)');
         const tabletSize = useMediaQuery('(max-width:1000px)');
@@ -244,7 +245,7 @@ let fontStyle = {
                 </Button>
                 <div className={classes.appbarHeightDiv}>
                     <div className={classes.appbarInnerDiv}>
-                        {history.location.pathname == '/receipt' ? null :(<ShoppingCartIcon style={mobButtonStyle} />)}
+                        {history.location.pathname == '/receipt'  || history.location.pathname == '/checkout' ? null :(<ShoppingCartIcon style={mobButtonStyle} />)}
                     </div>
                     <div className={classes.appbarOuterDiv}>
                         <p style={mobileFontStyle}>
@@ -268,7 +269,7 @@ let fontStyle = {
                             <div>{orderCountItems}</div>
                             {!mobileSize ? 
                                 (<div style={mobileSize ? mobCartSectionStyle : cartSectionStyle}>
-                                    {history.location.pathname == '/receipt' ? null :(<>
+                                    {history.location.pathname == '/receipt' || history.location.pathname == '/checkout' ? null :(<>
                                     <Button edge="start" onClick={handleCartClick} className={classes.menuButton} color="inherit">
                                     <ShoppingCartIcon style={buttonStyle} />
                                     </Button>
