@@ -126,6 +126,8 @@ const App = ({history,match}) => {
       fetchAllMasks(dispatch)
       fetchMaskCategory(dispatch,match.params.category)
       
+        dispatch({type:"HIDE_STICKY_UNIT",payload:false})
+
       if(sessionAllMasks && sessionAllMasks.length > 1 && sessionAllMasks !== null){
         console.log("")
       } else{

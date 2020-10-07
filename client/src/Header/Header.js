@@ -20,6 +20,8 @@ const Header = ({history,match}) => {
     let hitButton = useRef(0)
     
     useEffect(() =>{
+        console.log("hideStickyUnit")
+        console.log(hideStickyUnit)
 
         if(cartItemCount == null){
             sessionStorage.setItem('cartTotal',0)
@@ -245,7 +247,7 @@ let fontStyle = {
                 </Button>
                 <div className={classes.appbarHeightDiv}>
                     <div className={classes.appbarInnerDiv}>
-                        {history.location.pathname == '/receipt'  || history.location.pathname == '/checkout' ? null :(<ShoppingCartIcon style={mobButtonStyle} />)}
+                        <ShoppingCartIcon style={mobButtonStyle} />
                     </div>
                     <div className={classes.appbarOuterDiv}>
                         <p style={mobileFontStyle}>
@@ -255,7 +257,7 @@ let fontStyle = {
                 </div>
 
             </AppBar>
-            </>) 
+            </>)
          : null}
                 
                 <div style={mobileSize ? mobHeaderStyle : tabletSize ? tabletHeaderStyle :headerStyle}>

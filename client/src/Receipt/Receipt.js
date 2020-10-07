@@ -2,9 +2,14 @@ import React, {useContext} from 'react'
 import AuthContext from '../AuthContext'
 import {totalPrice} from '../cart.utils'
 import { Table } from 'reactstrap';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 const divStyle = {
     margin:'21% 0 0 0'
+}
+
+const mobDivStyle = {
+    margin:'30% 0 0 0'
 }
 
 const pStyle = {
@@ -47,8 +52,14 @@ const receiptInnerFormStyle = {
     width:'40%',
     justifyContent:'spaceBetween'
 }
+
 const receiptMiddleFormStyle = {
     width:'10%',
+    justifyContent:'spaceBetween'
+}
+
+const mobReceiptMiddleFormStyle = {
+    width:'25%',
     justifyContent:'spaceBetween'
 }
 
@@ -70,6 +81,7 @@ const Receipt = () => {
     const {state} = useContext(AuthContext)
     let {username,order,confirmation} = state;
     const cartItems = JSON.parse(sessionStorage.getItem('cart'))
+    const mobileSize = useMediaQuery('(max-width:600px)');
     
     let sessionItems = JSON.parse(sessionStorage.getItem('cart'))
     let maskTotal = totalPrice(sessionItems);
@@ -100,7 +112,7 @@ const Receipt = () => {
         // Chrome requires returnValue to be set
       });
 
-    return (<div style={divStyle}>
+    return (<div style={mobileSize ? mobDivStyle : divStyle}>
             <div style={pStyle}>
 
                 <p style={thankYouStyle}>
@@ -125,7 +137,7 @@ const Receipt = () => {
                             <p>{order.address}</p>
                             <p>{order.city}, {order.province} {order.postal_code}</p>
                         </div>
-                        <div style={receiptMiddleFormStyle}>
+                        <div style={mobileSize ? mobReceiptMiddleFormStyle : receiptMiddleFormStyle}>
                             Confirmation Number
                             <p>{confirmation}</p>
                         </div>
@@ -154,7 +166,7 @@ const Receipt = () => {
                             <td className="text-center">{cart.title}</td>
                             <td className="text-center">{cart.price}</td>
                             <td className="text-center">{cart.quantity}</td>
-                            <td className="text-center"><img height="100px" width="100px" src={cart.url} /></td>
+                            <td className="text-center"><img height="100px" width="185px" src={cart.url} /></td>
                         </tr>
                             )
                         })

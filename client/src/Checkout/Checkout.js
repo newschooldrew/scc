@@ -102,7 +102,7 @@ function ShoppingCartPage({history}) {
 }
 
 const goBackToShopping = () =>{
-  history.push('/')
+  history.push('/shopping/animals')
   dispatch({type:"HIDE_STICKY_UNIT",payload:false})
 }
 

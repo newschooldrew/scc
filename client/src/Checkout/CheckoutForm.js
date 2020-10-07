@@ -2,6 +2,7 @@ import React, {useContext, useEffect, useState } from "react";
 import AuthContext from '../AuthContext'
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import {createPaymentIntent,createOrder} from '../actions'
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import {withRouter} from 'react-router-dom'
 import { Form, FormGroup, Label, Input } from 'reactstrap';
 import './CheckoutForm.scss'
@@ -22,6 +23,7 @@ const CheckoutForm = ({price,history}) => {
   const [email,setEmail] = useState('')
   const stripe = useStripe();
   const elements = useElements();
+  const mobileSize = useMediaQuery('(max-width:600px)');
 
   let cartTotal = JSON.parse(sessionStorage.getItem('cart'))
 
@@ -122,9 +124,20 @@ const CheckoutForm = ({price,history}) => {
       maxWidth:'100% !important'
     }
 
+    const mobFormStyles = {
+      margin: '0',
+      display:'flex',
+      maxWidth:'100% !important'
+    }
+
     const outerStyles = {
       justifyContent:'spaceBetween',
       width:'13%'
+    }
+
+    const mobOuterStyles = {
+      justifyContent:'spaceBetween',
+      width:'0%'
     }
 
     const innerStyles = {
@@ -132,10 +145,15 @@ const CheckoutForm = ({price,history}) => {
       width:'74%'
     }
 
+    const mobInnerStyles = {
+      justifyContent:'spaceBetween',
+      width:'100%'
+    }
+
     return (
-      <div style={formStyles}>
-        <div style={outerStyles}></div>
-      <Form style={innerStyles} onSubmit={handleSubmit}>
+        <div style={mobileSize ? mobFormStyles : formStyles}>
+        <div style={mobileSize ? mobOuterStyles : outerStyles}></div>
+      <Form style={mobileSize ? mobInnerStyles :innerStyles} onSubmit={handleSubmit}>
 
       <div className="form-row">
                 <FormGroup className="col-md-6">
@@ -255,7 +273,7 @@ const CheckoutForm = ({price,history}) => {
         </button>
           
       </Form>
-      <div style={outerStyles}></div>
+      <div style={mobileSize ? mobOuterStyles : outerStyles}></div>
       </div>
     );
   };

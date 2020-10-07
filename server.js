@@ -193,12 +193,12 @@ newCheckout.email = email;
 newCheckout.confirmation = confirmationCode;
 
 newCheckout.save()
-    // .then(order =>{
-    //     return order.sendSmsNotification(
-    //       `${actualName} ${lastName} bought a mask!
-    //         Address is ${address},${city},${province} ${postal_code}
-    //       `, ()=>console.log("something went wrong"))
-    // })
+    .then(order =>{
+        return order.sendSmsNotification(
+          `${actualName} ${lastName} bought a mask!
+            Address is ${address},${city},${province} ${postal_code}
+          `, ()=>console.log("something went wrong"))
+    })
 
 const totalPrice = items =>{
   console.log("total Price items")
@@ -288,7 +288,7 @@ const totalPrice = items =>{
         // send multiple individual emails to multiple recipients 
         // where they don't see each other's email addresses
         console.log("sending mail")
-        // await sgMail.sendMultiple(msg);
+        await sgMail.sendMultiple(msg);
         // await sgMail.send(msg);
       } catch (error) {
         console.error(error);

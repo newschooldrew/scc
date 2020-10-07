@@ -26,7 +26,7 @@ const Directory = ({history}) => {
             linkUrl:"shopping/people"
         },
         {
-            title:"Birds & Butterflies",
+            title:"Animals",
             imageUrl:"https://res.cloudinary.com/dzdvrgbjd/image/upload/a_270/v1601139340/masks_birds_butterflies/IMG_4738_kxur2x.jpg",
             linkUrl:"shopping/animals"
         }
