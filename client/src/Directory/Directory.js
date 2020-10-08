@@ -8,9 +8,7 @@ const Directory = ({history}) => {
     const {state,dispatch} = useContext(AuthContext)
 
     useEffect(()=>{
-        console.log(history.location.pathname)
         if(history.location.pathname == '/'){
-          console.log("hide sticky unit!!")
           dispatch({type:"HIDE_STICKY_UNIT",payload:true})
         }
     },[])
@@ -38,8 +36,6 @@ const Directory = ({history}) => {
             <div className='directory-menu'>
             {
                 categories.map((cat,idx) => {
-                    console.log("cat")
-                    console.log(cat)
                     return(
                         <MenuItem key={idx} title={cat.title} imageUrl={cat.imageUrl} linkUrl={cat.linkUrl} />
                         )})

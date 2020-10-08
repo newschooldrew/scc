@@ -20,9 +20,6 @@ const Header = ({history,match}) => {
     let hitButton = useRef(0)
     
     useEffect(() =>{
-        console.log("hideStickyUnit")
-        console.log(hideStickyUnit)
-
         if(cartItemCount == null){
             sessionStorage.setItem('cartTotal',0)
         } 
@@ -44,7 +41,6 @@ const Header = ({history,match}) => {
         if(cartItems == undefined || cartItems == 'null' ){
             console.log("CartItems is undefined")
         } else{
-            console.log("header UE is hit")
             sessionStorage.setItem('cart',JSON.stringify(cartItems))
             newTotal = cartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
             dispatch({type:"HIT_COUNT",payload:hitButton.current +=1})

@@ -1,15 +1,21 @@
 import React, {useRef,useContext} from 'react'
 import AuthContext from '../AuthContext'
+// import Button from "../CustomButtons/Button.js";
+import {
+    Button
+  } from "reactstrap";
 
 const CustomButton = ({type,id,title,price,url,qty}) => {
     const {state,dispatch} = useContext(AuthContext)
-    const {allMasks,cartItems} = state;
 
     let sessionCartItems = JSON.parse(sessionStorage.getItem('cart'))
 
     let hitButton = useRef(0)
 
-    
+    const buttonStyle = {
+        'fontSize':'1.75em'
+    }
+
     const addItemToCart = (id,title,price,url) =>{
         const item = {id,title,price,url};
         dispatch({type:"ADD_ITEM_TO_CART",payload:item})
@@ -21,7 +27,6 @@ const CustomButton = ({type,id,title,price,url,qty}) => {
             existingNum = parseInt(sessionStorage.getItem(id));
             sessionStorage.setItem(`${id}`,existingNum + 1)
           } else{
-            console.log("existingNum does not exist")
             sessionStorage.setItem(`${id}`,1)
           }
     }
@@ -69,21 +74,21 @@ const CustomButton = ({type,id,title,price,url,qty}) => {
     return (<>
         {type == "positive" ? (
             <>
-                <button 
+                <Button color="success" type="button"
                     onClick={e => addItemToCart(id,title,price,url)}
                     disabled={limitReached || qty == 0}
                 >
-                    +
-                </button>
+                    <span style={buttonStyle}>+</span>
+                </Button>
             </>
         ): (
             <>
-                <button
+                <Button color="success" type="button"
                     onClick={() => removeItemFromCart(id,title,price,url)}
                     disabled={!disabled || qty == 0}
                 >
-                    -
-                </button>
+                    <span style={buttonStyle}>-</span>
+                    </Button>
             </>
         )}
     </>)

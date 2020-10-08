@@ -117,6 +117,13 @@ const App = ({history,match}) => {
         },
         outerHeader:{
           width:'65%',
+        },
+        buttonStyle:{
+          'color':'white',
+          'fontWeight':'bold'
+        },
+        filterFont:{
+          'fontSize':'1em'
         }
       }));
     
@@ -131,8 +138,6 @@ const App = ({history,match}) => {
       if(sessionAllMasks && sessionAllMasks.length > 1 && sessionAllMasks !== null){
         console.log("")
       } else{
-        console.log("allMasks")
-        console.log(allMasks)
         sessionStorage.setItem('allMasks',JSON.stringify(allMasks))
       }
     },[])
@@ -160,8 +165,6 @@ const App = ({history,match}) => {
             newTotal = cartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
             dispatch({type:"HIT_COUNT",payload:hitButton.current +=1})
             sessionStorage.setItem('cartTotal',newTotal)
-            console.log("cartItems")
-            console.log(cartItems)
         }
 
     }
@@ -190,13 +193,13 @@ const App = ({history,match}) => {
                 (<div className={classes.header}>
                   <div className={classes.mobileInnerHeader}></div>
                   <div className={classes.outerHeader}>
-                    <p>Filter Mask by Type</p>
+                    <p className={classes.filterFont}>Filter Mask by Type</p>
                   </div>
                 </div>) : null}
                 {mobileSize && history.location.pathname !== '/checkout' || tabletSize && history.location.pathname !== '/checkout' ? (
                 <div className={classes.fullWidth}>
                   <Button color={match.params.category == "animals" ? "success" : "info"} type="button" className={classes.buttonCenter} value="animals"  onClick={() => history.push('/shopping/animals')}>
-                      Birds/Butterflies
+                      Animals
                   </Button>
                   <Button color={match.params.category == "flowers" ? "success" : "info"} type="button" className={classes.buttonCenter} value="flowers"  onClick={() => history.push('/shopping/flowers')}>
                       Flowers
@@ -207,11 +210,11 @@ const App = ({history,match}) => {
                 </div>
                 ):(
                   <Col md="3">
-                  {!mobileSize ? (<Button color="info" type="button"><Link to="/checkout">Go To Checkout</Link></Button>) : null}
+                  {!mobileSize ? (<Button color="info" type="button"><Link to="/checkout"><span className={classes.buttonStyle}>Go To Checkout</span></Link></Button>) : null}
                   <div className="collapse-panel">
                     <CardBody>
                       <Card className="card-refine card-plain">
-                      <CardTitle tag="h4">
+                      <CardTitle tag="h5">
                           Filter Mask by Type{" "}
                           <Button
                             className="btn-icon btn-neutral pull-right"

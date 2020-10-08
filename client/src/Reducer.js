@@ -10,8 +10,6 @@ const Reducer = (state,{type,payload}) =>{
 
     case "ADD_ITEM_TO_CART":
         let sessionItems = JSON.parse(sessionStorage.getItem('cart'))
-        console.log("sessionItems within reducer")
-        console.log(sessionItems)
                 return{
                 ...state,
                 cartItems:addItemToCart(sessionItems || [],payload)

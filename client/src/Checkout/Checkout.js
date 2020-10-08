@@ -25,7 +25,6 @@ import GridContainer from "../Grid/GridContainer.js";
 import GridItem from "../Grid/GridItem.js";
 // import Footer from "components/Footer/Footer.js";
 import CheckoutTable from "../CheckoutTable/CheckoutTable.js";
-import Button from "../CustomButtons/Button.js";
 import Card from "../Card/Card.js";
 import CardBody from "../Card/CardBody.js";
 import {totalPrice,totalItemPrice} from '../cart.utils'
@@ -35,7 +34,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import {fetchAllMasks,getPublicStripeKey} from '../actions'
 import CheckoutForm from './CheckoutForm'
-import { ButtonGroup, Table, UncontrolledTooltip } from "reactstrap";
+import { Button,ButtonGroup, Table, UncontrolledTooltip } from "reactstrap";
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 const useStyles = makeStyles(shoppingCartStyle);
@@ -45,8 +44,6 @@ function ShoppingCartPage({history}) {
   const {allMasks,cartItems,hitCount} = state;
   const mobileSize = useMediaQuery('(max-width:600px)');
   const stripePromise = getPublicStripeKey().then(key => {
-    console.log("key:")
-    console.log(key)
     return loadStripe(key)
   });
   let hitButton = useRef(0),
@@ -128,8 +125,9 @@ const removeItemFromCart = (id,title,price) =>{
     if(cartCount && cartCount.length == 1){
         sessionStorage.removeItem('cart');
         sessionStorage.setItem('cartTotal',0)
+        dispatch({type:"EMPTY_CART"})
     }else{
-        dispatch({type:"CLEAR_CART",payload:item})
+        dispatch({type:"REMOVE_ITEM_FROM_CART",payload:item})
     }
 }
 
@@ -222,9 +220,6 @@ if(!cartItems && !sessionItems) return (<div>loading checkout items</div>)
                       return(
                         sessionItems.map((item,idx) =>{
                           const {id,title,price,quantity} = item;
-                          console.log("quantity:")
-                          console.log(quantity)
-
                           if(myMasks){
                             myMasks.map(mask =>{
                             if(mask._id == id){ 
@@ -283,7 +278,7 @@ if(!cartItems && !sessionItems) return (<div>loading checkout items</div>)
                                                   color="info"
                                                   size="sm"
                                                   round
-                                                  disabled={currentItem[0].quantity == quantity}
+                                                  disabled={currentItem[0].quantity == quantity || quantity < currentItem[0].quantity}
                                                   onClick={() => addItemToCart(id,title,price)}
                                                 >
                                                   <i className="now-ui-icons ui-1_simple-add"></i>
@@ -356,7 +351,8 @@ if(!cartItems && !sessionItems) return (<div>loading checkout items</div>)
                                 })
                               }
                                 let currentItem = matchCartItemArr.filter(item => item._id == id)
-                            
+                                console.log("currentItem")
+                                console.log(currentItem)
                                 let tableHeadData;
       
                                 if(!mobileSize){
@@ -406,7 +402,7 @@ if(!cartItems && !sessionItems) return (<div>loading checkout items</div>)
                                                         color="info"
                                                         size="sm"
                                                         round
-                                                        disabled={currentItem[0].quantity == quantity}
+                                                        disabled={currentItem[0].quantity == quantity  || quantity < currentItem[0].quantity}
                                                         onClick={() => addItemToCart(id,title,price)}
                                                       >
                                                         <i className="now-ui-icons ui-1_simple-add"></i>

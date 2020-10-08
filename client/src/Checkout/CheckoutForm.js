@@ -4,11 +4,11 @@ import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import {createPaymentIntent,createOrder} from '../actions'
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import {withRouter} from 'react-router-dom'
-import { Form, FormGroup, Label, Input } from 'reactstrap';
+import { Button,Form, FormGroup, Label, Input } from 'reactstrap';
 import './CheckoutForm.scss'
 
 const CheckoutForm = ({price,history}) => {
-  const {state,dispatch} = useContext(AuthContext)
+  const {dispatch} = useContext(AuthContext)
 
   const [clientSecret, setClientSecret] = useState(null);
   const [error, setError] = useState(null);
@@ -31,11 +31,7 @@ const CheckoutForm = ({price,history}) => {
     const item = {actualName,address,city,province,postal_code,email,price,cartTotal}
       createPaymentIntent(item)
       .then((clientSecret) => {
-          console.log("clientSecret:")
-          console.log(clientSecret.client_secret)
           setClientSecret(clientSecret.client_secret)
-        console.log("clientSecret:")
-        console.log(clientSecret)
       })
       .catch((err) => {
         setError(err.message);
@@ -46,11 +42,7 @@ const CheckoutForm = ({price,history}) => {
     const item = {actualName,address,city,province,postal_code,email,price,cartTotal}
       createPaymentIntent(item)
       .then((clientSecret) => {
-          console.log("clientSecret:")
-          console.log(clientSecret.client_secret)
           setClientSecret(clientSecret.client_secret)
-        console.log("clientSecret:")
-        console.log(clientSecret)
       })
       .catch((err) => {
         setError(err.message);
@@ -266,11 +258,11 @@ const CheckoutForm = ({price,history}) => {
 
         {error && <div className="message sr-field-error">{error}</div>}
 
-        <button
+        <Button color="info" type="button"
           className="btn"
           >
             {processing ? "Processing…" : "Pay"}
-        </button>
+        </Button>
           
       </Form>
       <div style={mobileSize ? mobOuterStyles : outerStyles}></div>

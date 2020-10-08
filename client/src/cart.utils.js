@@ -1,7 +1,4 @@
 export const addItemToCart = (cartItems, cartItemToAdd) =>{
-    console.log("cartItems in util")
-    console.log(cartItems)
-    console.log(typeof cartItems)
         const existingCartItem = cartItems.find(
             cartItem =>cartItem.id === cartItemToAdd.id
             )
@@ -20,8 +17,6 @@ export const addItemToCart = (cartItems, cartItemToAdd) =>{
 
 export const removeItemFromCart = (cartItems,cartItemToRemove,cartTotal) => {
         // find out if there is an item in the count
-        console.log("cartItems from removeItem fn")
-        console.log(cartItems)
         const existingCartItem = cartItems.find(
             cartItem => cartItem.id === cartItemToRemove.id
             )
@@ -42,8 +37,6 @@ export const removeItemFromCart = (cartItems,cartItemToRemove,cartTotal) => {
                 }
 
 export const totalPrice = items =>{
-    console.log("total Price items")
-    console.log(items)
     if(items){
         let price = items.reduce((acc,item) => acc + item.quantity * item.price,0);
         return price.toFixed(2);
@@ -53,8 +46,6 @@ export const totalPrice = items =>{
 }
 
 export const totalItemPrice = item => {
-    console.log("item:")
-    console.log(item)
     let price = item.quantity * item.price;
     return price.toFixed(2);
 }
