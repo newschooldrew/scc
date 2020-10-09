@@ -9,6 +9,7 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import CartDropdown from '../CartDropdown/CartDropdown'
 import update from 'immutability-helper'
 import {fetchAllMasks} from '../actions'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 const Header = ({history,match}) => {
     const {state,dispatch} = useContext(AuthContext)

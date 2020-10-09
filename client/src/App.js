@@ -64,7 +64,6 @@ const App = ({history,match}) => {
           color: theme.palette.text.secondary,
         },
         clickable:{
-          cursor:'pointer',
           width:'200px',
           height:'160px',
           objectFit:'cover',
@@ -299,13 +298,11 @@ const App = ({history,match}) => {
                     <Col lg="4" md="6">
                       <Card className="card-product card-plain">
                       <div className={"card-image",classes.center}>
-                          <a onClick={(e) => history.push(`/product-page/${post._id}`)}>
                             <img
                               className={classes.clickable}
                               alt="..."
                               src={post.url}
                             />
-                          </a>
                         </div>
                         <CardBody>
                             <CardTitle tag="h4">{post.title}</CardTitle>
