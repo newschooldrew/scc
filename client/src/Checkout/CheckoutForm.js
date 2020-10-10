@@ -258,11 +258,11 @@ const CheckoutForm = ({price,history}) => {
 
         {error && <div className="message sr-field-error">{error}</div>}
 
-        <Button color="info" type="button"
-          className="btn"
+        <button
+        className="btn"
           >
             {processing ? "Processing…" : "Pay"}
-        </Button>
+        </button>
           
       </Form>
       <div style={mobileSize ? mobOuterStyles : outerStyles}></div>

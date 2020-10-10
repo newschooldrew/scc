@@ -9,7 +9,7 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import CartDropdown from '../CartDropdown/CartDropdown'
 import update from 'immutability-helper'
 import {fetchAllMasks} from '../actions'
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import './header.css'
 
 const Header = ({history,match}) => {
     const {state,dispatch} = useContext(AuthContext)
@@ -19,6 +19,7 @@ const Header = ({history,match}) => {
     let sessionCartItems = JSON.parse(sessionStorage.getItem('cart'))
     let newTotal;
     let hitButton = useRef(0)
+    let wrapperRef = useRef(null)
     
     useEffect(() =>{
         if(cartItemCount == null){
@@ -38,16 +39,20 @@ const Header = ({history,match}) => {
         if(cartItemCount == null){
             sessionStorage.setItem('cartTotal',0)
         } 
-        
+        let currentItem = wrapperRef.current;
         if(cartItems == undefined || cartItems == 'null' ){
             console.log("CartItems is undefined")
         } else{
+            
+            console.log("currentItem")
+            console.log(currentItem)
+            currentItem.classList.add('cart-full')
             sessionStorage.setItem('cart',JSON.stringify(cartItems))
             newTotal = cartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
             dispatch({type:"HIT_COUNT",payload:hitButton.current +=1})
             sessionStorage.setItem('cartTotal',newTotal)
+            // currentItem.classList.remove('cart-full')
         }
-          
 
     },[cartItems,hitButton])
 
@@ -272,7 +277,7 @@ let fontStyle = {
                                     <Button edge="start" onClick={handleCartClick} className={classes.menuButton} color="inherit">
                                     <ShoppingCartIcon style={buttonStyle} />
                                     </Button>
-                                        <div className={classes.pContainer}><p style={fontStyle}>Cart Items: {cartItemCount}</p></div></>)}
+                                        <div className={classes.pContainer}><p ref={wrapperRef} style={fontStyle}>Cart Items: {cartItemCount}</p></div></>)}
                                     {toggleCart ? (<CartDropdown cartItems={sessionCartItems} />):null}
                                 </div>)
                         :null}

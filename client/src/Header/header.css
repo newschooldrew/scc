@@ -3,3 +3,13 @@
   transition: opacity 4s ease-in;
   color:red
 }
+
+.cart-full{
+
+  animation: fade 1.5s linear forwards;
+}
+
+@keyframes fade {
+  0%,100% { font-weight: normal }
+  50% { font-weight: bold }
+}

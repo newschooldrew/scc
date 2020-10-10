@@ -215,19 +215,6 @@ const App = ({history,match}) => {
                       <Card className="card-refine card-plain">
                       <CardTitle tag="h5">
                           Filter Mask by Type{" "}
-                          <Button
-                            className="btn-icon btn-neutral pull-right"
-                            color="default"
-                            id="tooltip633919451"
-                          >
-                            <i className="arrows-1_refresh-69 now-ui-icons"></i>
-                          </Button>
-                          <UncontrolledTooltip
-                            delay={0}
-                            target="tooltip633919451"
-                          >
-                            Reset Filter
-                          </UncontrolledTooltip>
                         </CardTitle>
                         <CardHeader id="headingTwo" role="tab">
                           <h6>
