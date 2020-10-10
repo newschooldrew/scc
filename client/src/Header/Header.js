@@ -46,7 +46,7 @@ const Header = ({history,match}) => {
             
             console.log("currentItem")
             console.log(currentItem)
-            currentItem.classList.add('cart-full')
+            // currentItem.classList.add('cart-full')
             sessionStorage.setItem('cart',JSON.stringify(cartItems))
             newTotal = cartItems.reduce((acc,cartItem) => acc + cartItem.quantity,0)
             dispatch({type:"HIT_COUNT",payload:hitButton.current +=1})
