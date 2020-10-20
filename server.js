@@ -42,7 +42,7 @@ app.get("/public-key", (req, res) => {
 });
 
 app.get('/fetch-masks',async (req,res) =>{
-    const allMasks = await Mask.find({})
+    const allMasks = await Mask.find({}).sort({quantity:-1})
     console.log("allMasks")
     console.log(allMasks)
     res.send(allMasks)
@@ -52,7 +52,7 @@ app.post('/fetch-masks-category',async (req,res) =>{
   console.log("fetch masks req.body")
   console.log(req.body)
   const {type} = req.body;
-    const allMasks = await Mask.find({type})
+    const allMasks = await Mask.find({type}).sort({quantity:-1})
     console.log(allMasks)
     res.send(allMasks)
 })

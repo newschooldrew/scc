@@ -71,7 +71,7 @@ const App = ({history,match}) => {
         },
         scroll:{
           overflow:'scroll',
-          margin:'15% 0 0 0'
+          margin:'25% 0 0 0'
         },
         width:{
           width:0
@@ -123,6 +123,10 @@ const App = ({history,match}) => {
         },
         filterFont:{
           'fontSize':'1em'
+        },
+        fontPrice:{
+          fontWeight:'bold',
+          color:'black'
         }
       }));
     
@@ -294,7 +298,7 @@ const App = ({history,match}) => {
                         <CardBody>
                             <CardTitle tag="h4">{post.title}</CardTitle>
                             <CardText className="card-description">{post.description}</CardText>
-                                <CardTitle className="card-description">${post.price}</CardTitle>
+                                <CardTitle className={"card-description",classes.fontPrice}>${post.price}</CardTitle>
                                 <CardTitle>
                                     {/* <Button 
                                         color="info" 
@@ -325,7 +329,7 @@ const App = ({history,match}) => {
                                 <CardText className={classes.paper}>Masks Remaining: </CardText>
                                 <CardText className={classes.paper}>{post.quantity == 0 ? 
                                     (<span className={classes.soldOut}>SOLD OUT</span>): 
-                                    (<span className={classes.quantityStyle}>{post.quantity}</span>)}
+                                    (<span className={classes.quantityStyle,classes.fontPrice}>{post.quantity}</span>)}
                                 </CardText>
                             </CardFooter>
                         </Card>
