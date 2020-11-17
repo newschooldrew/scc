@@ -13,7 +13,7 @@ import './header.css'
 
 const Header = ({history,match}) => {
     const {state,dispatch} = useContext(AuthContext)
-    const {cartItems,toggleCart,hideStickyUnit,hitCount} = state;
+    const {cartItems,toggleCart,hideStickyUnit,hitCount,alert} = state;
     let cartItemCount = sessionStorage.getItem('cartTotal')
     let orderCountItems = sessionStorage.getItem('orderCount')
     let sessionCartItems = JSON.parse(sessionStorage.getItem('cart'))
@@ -34,6 +34,11 @@ const Header = ({history,match}) => {
                     sessionStorage.setItem('cartTotal',newTotal)
                 }
     },[])
+    
+    useEffect(() =>{
+        console.log("alert")
+        console.log(alert)
+    },[alert])
 
     useEffect(() =>{              
         if(cartItemCount == null){
@@ -64,6 +69,7 @@ const handleCartClick = () =>{
 }
 
 const handleHeaderClick = () => {
+    dispatch({type:"SET_ALERT",payload:''})
     if(history.location.pathname == '/receipt') {
         dispatch({type:"EMPTY_CART"})
         history.push('/')
@@ -282,6 +288,24 @@ let fontStyle = {
                                 </div>)
                         :null}
                 </div>  
+                        {history.location.pathname == '/checkout' ? 
+                        (alert ? 
+                            typeof alert == "string" ? (<li>We're sorry, {alert} has sold out. Please remove this item from the cart.</li>) : 
+                            
+                                alert.map(a =>{
+                                    console.log("alert")
+                                    console.log(alert)
+                                    console.log("a")
+                                    console.log(a)
+                            
+                                return(
+                                    <li>We're sorry, {a} has sold out. Please remove this item 
+                                        from the cart.</li>
+                                )
+                            })
+                            :null
+                        )
+                        : null}
                 
         </AppBar>
     </div>

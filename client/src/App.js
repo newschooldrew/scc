@@ -143,6 +143,7 @@ const App = ({history,match}) => {
       } else{
         sessionStorage.setItem('allMasks',JSON.stringify(allMasks))
       }
+      
     },[])
     
     useEffect(() =>{

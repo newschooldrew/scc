@@ -60,7 +60,7 @@ const Reducer = (state,{type,payload}) =>{
     case "CREATE_CONFIRMATION":
         return{
                 ...state,
-                confirmation:payload
+                orderConfirmation:payload
             }  
     case "HIDE_STICKY_UNIT":
         return{
@@ -71,6 +71,11 @@ const Reducer = (state,{type,payload}) =>{
         return{
                 ...state,
                 masksCategory:payload
+            }  
+    case "SET_ALERT":
+        return{
+                ...state,
+                alert:payload
             }  
     }
 }

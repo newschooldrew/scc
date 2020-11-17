@@ -4,8 +4,10 @@ const AuthContext = createContext({
     toggleCart:false,
     hitCount:0,
     order:null,
-    confirmation:null,
+    orderConfirmation:null,
     hideStickyUnit:false,
-    masksCategory:null
+    masksCategory:null,
+    duplicateMask:false,
+    alert:null
 })
 export default AuthContext;

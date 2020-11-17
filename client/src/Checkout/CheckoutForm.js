@@ -8,7 +8,8 @@ import { Button,Form, FormGroup, Label, Input } from 'reactstrap';
 import './CheckoutForm.scss'
 
 const CheckoutForm = ({price,history}) => {
-  const {dispatch} = useContext(AuthContext)
+  const {state,dispatch} = useContext(AuthContext)
+  const {orderConfirmation} = state;
 
   const [clientSecret, setClientSecret] = useState(null);
   const [error, setError] = useState(null);
@@ -26,7 +27,10 @@ const CheckoutForm = ({price,history}) => {
   const mobileSize = useMediaQuery('(max-width:600px)');
 
   let cartTotal = JSON.parse(sessionStorage.getItem('cart'))
-
+  let soldOutObjects = [];
+  let message = '';
+  let divBeginning = '<div>'
+  let divEnd = '<div>'
   useEffect(() => {
     const item = {actualName,address,city,province,postal_code,email,price,cartTotal}
       createPaymentIntent(item)
@@ -48,6 +52,34 @@ const CheckoutForm = ({price,history}) => {
         setError(err.message);
       });
   },[price]);
+
+  useEffect(() => {
+    console.log("orderConfirmation")
+    console.log(orderConfirmation)
+    console.log(typeof orderConfirmation)
+    if(orderConfirmation && typeof orderConfirmation == 'object' && orderConfirmation.length > 0){
+      console.log(orderConfirmation.length)
+      if(orderConfirmation.length == 1){
+        soldOutObjects = orderConfirmation[0].title
+      } else{
+          for(let x of orderConfirmation){
+            console.log(x.title)
+            soldOutObjects.push(x.title)
+          }
+          console.log("soldOutObjects")
+          console.log(soldOutObjects)
+          soldOutObjects.map(object =>{
+            console.log(object)
+            message += "\n" + object + "has unfortunately just sold out!" + "\n"
+            console.log(message)
+          })
+        }
+      dispatch({type:"SET_ALERT",payload:soldOutObjects})
+      dispatch({type:"CREATE_CONFIRMATION",payload:null})
+    } else if(typeof orderConfirmation == 'string'){
+      history.push('/receipt')
+    }
+  },[orderConfirmation]);
   
   const handleSubmit = async (ev) => {
     ev.preventDefault();
@@ -78,7 +110,7 @@ const CheckoutForm = ({price,history}) => {
 
     if (payload.error || !payload) {
       setError(`Payment failed: ${payload.error.message}`);
-      setProcessing(false);
+      setProcessing(true);
       console.log("[error]", payload.error);
     } else {
       setError(null);
@@ -87,7 +119,6 @@ const CheckoutForm = ({price,history}) => {
       console.log("[PaymentIntent]", payload.paymentIntent)
       dispatch({type:"CREATE_ORDER",payload:item})
       createOrder(item,dispatch)
-      history.push('/receipt')
     }
   };
 

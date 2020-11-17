@@ -5,9 +5,10 @@ const mongoose = require('mongoose')
 const keys = require('./keys')
 const Mask = require('./models/Mask')
 const Checkout = require('./models/Checkout')
-const stripe = require('stripe')(process.env.SECRET_KEY);
+const stripe = require('stripe')('sk_test_51HT8LfCzzxJaDTQL7L0ogA2hXrnqgO4gBzOGF6iUdi2kcl5ffdKdS5ZnzkmAfiOV1lIvDzGGTXHxM1Fih855YG7P00qjMGbCi8');
 const cors = require('cors');
 const sgMail = require('@sendgrid/mail');
+const { TrunkContext } = require('twilio/lib/rest/trunking/v1/trunk')
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 require('dotenv').config()
 
@@ -38,7 +39,8 @@ app.use(bodyParser.json())
 //////////// public key /////////////
 
 app.get("/public-key", (req, res) => {
-  res.send({ publicKey: process.env.PUBLISHABLE_KEY });
+  // res.send({ publicKey: process.env.PUBLISHABLE_KEY });
+  res.send({ publicKey: 'pk_test_51HT8LfCzzxJaDTQLOlBN3RvlngxHhbdnB4cbjCjckp9CEF6kYfzuUAfK8B2jeuRZanoU8clXDkekmFoDVYCW8tAf00TnA2qV1U' });
 });
 
 app.get('/fetch-masks',async (req,res) =>{
@@ -169,6 +171,55 @@ app.post('/create-order',async (req,res)=>{
   
   JSON.stringify(cartTotal)
 
+    // loop through cart items in cart
+    // also loop through database
+    // if any of the items in the cart have a quantity of 0, stop and return item that was sold out
+
+    let emptyMasks = [];
+    let mapIds = [];
+    let continueScript = false;
+    let foundMasks = [];
+    let validation = [];
+
+    const pushIds = async () =>{
+        cartTotal.map(async item =>{
+          Mask.findById({_id:item.id}).then(res => {
+            foundMasks.push(res)
+            console.log("foundMasks")
+            console.log(foundMasks)
+            return foundMasks
+          })
+        }) // end cartTotal.map
+      }
+      pushIds()
+      
+      setTimeout(
+      function (){
+        foundMasks.map(mask =>{
+        console.log("foundMasks")
+        console.log(foundMasks)
+        if(mask.quantity == 0){
+          validation.push("yes")
+          emptyMasks.push(mask)
+        } else {
+          validation.push("no")
+          console.log("continueScript else")
+          console.log(continueScript)
+        }
+      })
+
+      const checkArr = val => val == "no"
+      console.log("validation.every(checkArr)")
+      console.log(validation.every(checkArr))
+
+      if(validation.every(checkArr)){
+        continueScript = true
+      } else{
+        continueScript = false
+      }
+
+      if(continueScript == true){
+
   const makeid = length => {
     var result           = '';
     var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -181,24 +232,24 @@ app.post('/create-order',async (req,res)=>{
 
   let confirmationCode = makeid(8)
 
-const newCheckout = await new Checkout()
-newCheckout.order = cartTotal;
-newCheckout.firstName = actualName;
-newCheckout.lastName = lastName;
-newCheckout.address = address;
-newCheckout.city = city;
-newCheckout.state = province;
-newCheckout.zipCode = postal_code;
-newCheckout.email = email;
-newCheckout.confirmation = confirmationCode;
+  const newCheckout = new Checkout()
+  newCheckout.order = cartTotal;
+  newCheckout.firstName = actualName;
+  newCheckout.lastName = lastName;
+  newCheckout.address = address;
+  newCheckout.city = city;
+  newCheckout.state = province;
+  newCheckout.zipCode = postal_code;
+  newCheckout.email = email;
+  newCheckout.confirmation = confirmationCode;
 
-newCheckout.save()
-    .then(order =>{
-        return order.sendSmsNotification(
-          `${actualName} ${lastName} bought a mask!
-            Address is ${address},${city},${province} ${postal_code}
-          `, ()=>console.log("something went wrong"))
-    })
+  newCheckout.save()
+      // .then(order =>{
+      //     return order.sendSmsNotification(
+      //       `${actualName} ${lastName} bought a mask!
+      //         Address is ${address},${city},${province} ${postal_code}
+      //       `, ()=>console.log("something went wrong"))
+      // })
 
 const totalPrice = items =>{
   console.log("total Price items")
@@ -276,6 +327,7 @@ const totalPrice = items =>{
   </html>`
     };
     
+
     cartTotal.map(async item =>{
       const foundMask = await Mask.findByIdAndUpdate(
           {_id:item.id},
@@ -288,7 +340,7 @@ const totalPrice = items =>{
         // send multiple individual emails to multiple recipients 
         // where they don't see each other's email addresses
         console.log("sending mail")
-        await sgMail.sendMultiple(msg);
+        // await sgMail.sendMultiple(msg);
         // await sgMail.send(msg);
       } catch (error) {
         console.error(error);
@@ -300,7 +352,17 @@ const totalPrice = items =>{
       }
 
       res.send(confirmationCode)
-  })
+    
+    } 
+    else if(continueScript == false){
+      console.log("this should send")
+      console.log(emptyMasks)
+      res.send(emptyMasks)
+    }// end if/else
+
+  },150)
+
+})
 
 if(process.env.NODE_ENV == 'production'){
   app.use(express.static('client/build'));
